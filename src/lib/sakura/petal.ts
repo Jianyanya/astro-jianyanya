@@ -10,10 +10,10 @@ const PETAL_PATH =
 
 /** Tip and base colors per variant; the gradient runs from the notched tip to the base. */
 export const PETAL_COLORS: ReadonlyArray<readonly [tip: string, base: string]> = [
-  ['#ffe6ee', '#ff9ebd'],
-  ['#fff3f7', '#ffb8cc'],
-  ['#ffd9e5', '#f7879f'],
-  ['#fff9fb', '#ffc7d6'],
+  ['#fff6dd', '#f0b445'],
+  ['#ffffff', '#ffd98a'],
+  ['#ffe2c4', '#d99a2b'],
+  ['#fff9ef', '#c98f2e'],
 ];
 
 /**
