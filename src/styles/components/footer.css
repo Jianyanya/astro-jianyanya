@@ -1,0 +1,41 @@
+/* 女仆咖啡厅页脚：女仆黑底白字 + 粉色猫爪 */
+.footer-maid {
+  margin-top: auto;
+  padding: 2.25rem 0 2rem;
+  background: #1f1f23;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.footer-maid :where(.text-muted-foreground) {
+  color: rgb(255 255 255 / 0.65);
+}
+
+.footer-maid :where(.bg-muted-foreground\/30) {
+  background-color: rgb(255 255 255 / 0.2);
+}
+
+.footer-maid .footer-paw {
+  color: #f6bcbc;
+  font-size: 0.95em;
+}
+
+.footer-maid a:hover {
+  color: #f6bcbc;
+}
+
+/* 女仆围裙边：卡片顶部 4px 红金渐变 */
+.maid-card {
+  position: relative;
+}
+
+.maid-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--gradient-pink);
+  border-radius: 999px 999px 0 0;
+  opacity: 0.9;
+  z-index: 2;
+  pointer-events: none;
+}

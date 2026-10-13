@@ -245,7 +245,7 @@
     color: transparent;
   }
 
-  /* 自定义项目符号 */
+  /* 自定义项目符号：一级列表用猫爪，嵌套列表保留圆点 */
   ul > li::before {
     content: "";
     position: absolute;
@@ -256,6 +256,17 @@
     border-radius: 50%;
     background: hsl(var(--primary));
     opacity: 0.7;
+  }
+
+  :not(li) > ul > li::before {
+    content: "🐾";
+    background: none;
+    width: auto;
+    height: auto;
+    left: 0.1rem;
+    top: 0.45em;
+    font-size: 0.72em;
+    opacity: 0.85;
   }
 
   /* 嵌套列表缩进 */

@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear();
 const startYear = siteConfig?.startYear ?? currentYear;
 ---
 
-<footer class={cn('mt-auto pb-6', className)}>
+<footer class={cn('footer-maid mt-auto', className)}>
   <div class={cn('mx-auto flex flex-col items-center gap-3 px-6 md:pb-10 md:px-3', MAX_WIDTH.content)}>
     <!-- Announcements Entry -->
     <FooterAnnouncementEntry client:idle />
@@ -64,6 +64,7 @@ const startYear = siteConfig?.startYear ?? currentYear;
 
     <!-- Copyright -->
     <div class="text-muted-foreground flex items-center gap-0.5 text-sm">
+      <span class="footer-paw select-none">🐾</span>
       <span class="opacity-75">©</span>
       <span class="font-medium opacity-75">{startYear}</span>
       {
@@ -81,6 +82,7 @@ const startYear = siteConfig?.startYear ?? currentYear;
         {siteConfig.name}
         {siteConfig?.alternate ? `@${siteConfig.alternate}` : ''}
       </span>
+      <span class="footer-paw select-none">🐾</span>
     </div>
 
     <!-- ICP Filing -->
