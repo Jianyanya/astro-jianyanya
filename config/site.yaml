@@ -91,11 +91,23 @@ categoryMap:
 #   image: 封面图片路径（相对于 public 目录）
 #   description: 分类描述文字，显示在卡片上
 # -----------------------------------------------------------------------------
-featuredCategories: []
-  # - link: life # 对应 categoryMap 中 随笔: life
-  #   label: 随笔
-  #   image: /img/cover/2.webp
-  #   description: 生活记录、随想随笔
+featuredCategories:
+  - link: life # 对应 categoryMap 中 随笔: life
+    label: 随笔
+    image: /img/cover/2.webp
+    description: 生活记录、随想随笔
+  - link: note # 对应 categoryMap 中 笔记: note
+    label: 笔记
+    image: /img/cover/4.webp
+    description: 技术笔记、学习笔记
+  - link: note/front-end # 嵌套分类：笔记/前端
+    label: 前端
+    image: /img/cover/1.webp
+    description: 前端技术相关
+  - link: tools # 对应 categoryMap 中 工具: tools
+    label: 工具
+    image: /img/cover/11.webp
+    description: 工具使用、效率提升
 
 # =============================================================================
 # Featured Series
@@ -114,18 +126,18 @@ featuredCategories: []
 #   highlightOnHome: 是否在首页高亮显示最新文章（可选，默认 true，显式设为 false 可禁用）
 #   links: 相关链接配置（可选）
 # -----------------------------------------------------------------------------
-featuredSeries: []
-  # - slug: weekly # URL 路径: /weekly
-  #   categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
-  #   label: 我的周刊 # 简短名称
-  #   fullName: 我的技术周刊 # 完整名称
-  #   description: | # 支持多行 Markdown
-  #     这是周刊/系列文章功能的示例配置。
-  #     你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
-  #     设置 enabled: false 可以关闭此功能。
-  #   cover: /img/weekly_header.webp # 系列页面头图
-  #   enabled: true # 启用此系列
-  #   icon: ri:newspaper-line # 导航图标
+featuredSeries:
+  - slug: weekly # URL 路径: /weekly
+    categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
+    label: 我的周刊 # 简短名称
+    fullName: 我的技术周刊 # 完整名称
+    description: | # 支持多行 Markdown
+      这是周刊/系列文章功能的示例配置。
+      你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
+      设置 enabled: false 可以关闭此功能。
+    cover: /img/weekly_header.webp # 系列页面头图
+    enabled: true # 启用此系列
+    icon: ri:newspaper-line # 导航图标
   # 示例：添加第二个系列（取消注释启用）
   # - slug: reading # URL 路径: /reading
   #   categoryName: 书摘
@@ -742,9 +754,15 @@ seo:
 # Christmas/Seasonal Features
 # =============================================================================
 bgm:
-  enabled: false # (有 audio 时自动启用，显式 false 可禁用)
+  enabled: true # (有 audio 时自动启用，显式 false 可禁用)
   # metingApi: https://163.hyc.moe/  # Meting API 地址，默认为 https://163.hyc.moe/，推荐自部署
-  audio: []
+  audio:
+    - title: 最爱山山
+      list:
+        - https://music.163.com/playlist?id=8676645748
+    - title: Love Vocaloid
+      list:
+        - https://music.163.com/playlist?id=8882890045
 
 christmas:
   enabled: false # 总开关
@@ -772,8 +790,8 @@ christmas:
 #   label: 导航显示名称（可选，默认：追番）
 #   icon: 导航图标，Iconify 格式（可选，默认：ri:bilibili-fill）
 # -----------------------------------------------------------------------------
-# bangumi:
-#   userId: cosine
+bangumi:
+  userId: cosine
   # label: 追番
   # icon: ri:bilibili-fill
 
