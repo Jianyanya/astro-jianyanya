@@ -91,23 +91,11 @@ categoryMap:
 #   image: 封面图片路径（相对于 public 目录）
 #   description: 分类描述文字，显示在卡片上
 # -----------------------------------------------------------------------------
-featuredCategories:
-  - link: life # 对应 categoryMap 中 随笔: life
-    label: 随笔
-    image: /img/cover/2.webp
-    description: 生活记录、随想随笔
-  - link: note # 对应 categoryMap 中 笔记: note
-    label: 笔记
-    image: /img/cover/4.webp
-    description: 技术笔记、学习笔记
-  - link: note/front-end # 嵌套分类：笔记/前端
-    label: 前端
-    image: /img/cover/1.webp
-    description: 前端技术相关
-  - link: tools # 对应 categoryMap 中 工具: tools
-    label: 工具
-    image: /img/cover/11.webp
-    description: 工具使用、效率提升
+featuredCategories: []
+  # - link: life # 对应 categoryMap 中 随笔: life
+  #   label: 随笔
+  #   image: /img/cover/2.webp
+  #   description: 生活记录、随想随笔
 
 # =============================================================================
 # Featured Series
@@ -126,23 +114,18 @@ featuredCategories:
 #   highlightOnHome: 是否在首页高亮显示最新文章（可选，默认 true，显式设为 false 可禁用）
 #   links: 相关链接配置（可选）
 # -----------------------------------------------------------------------------
-featuredSeries:
-  - slug: weekly # URL 路径: /weekly
-    categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
-    label: 我的周刊 # 简短名称
-    fullName: 我的技术周刊 # 完整名称
-    description: | # 支持多行 Markdown
-      这是周刊/系列文章功能的示例配置。
-      你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
-      设置 enabled: false 可以关闭此功能。
-    cover: /img/weekly_header.webp # 系列页面头图
-    enabled: true # 启用此系列
-    icon: ri:newspaper-line # 导航图标
-    links: # 相关链接（可选）
-      github: https://github.com/your-username/your-repo # (可选) GitHub 仓库
-      rss: /rss.xml # (可选) RSS 订阅链接
-      # chrome: https://chromewebstore.google.com/detail/your-extension-id # (可选) 浏览器插件
-      # docs: https://your-docs-url # (可选) 文档链接
+featuredSeries: []
+  # - slug: weekly # URL 路径: /weekly
+  #   categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
+  #   label: 我的周刊 # 简短名称
+  #   fullName: 我的技术周刊 # 完整名称
+  #   description: | # 支持多行 Markdown
+  #     这是周刊/系列文章功能的示例配置。
+  #     你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
+  #     设置 enabled: false 可以关闭此功能。
+  #   cover: /img/weekly_header.webp # 系列页面头图
+  #   enabled: true # 启用此系列
+  #   icon: ri:newspaper-line # 导航图标
   # 示例：添加第二个系列（取消注释启用）
   # - slug: reading # URL 路径: /reading
   #   categoryName: 书摘
@@ -245,62 +228,14 @@ friends:
         image: https://your-blog.com/avatar.jpg # 头像链接
         color: "#ffc0cb" # 主题色（可选）
   data: # 友链列表；同组内按这里的顺序展示
-    - site: 余弦の博客
-      url: https://blog.cosine.ren
-      owner: cos
-      desc: FE / ACG / 手工 / 深色模式强迫症 / INFP / 兴趣广泛养两只猫的老宅女 / remote
-      image: https://blog.cosine.ren/img/avatar.webp
-      color: '#ed788b'
-      group: familiar
-    - site: 示例博客 A
-      url: https://example-a.com
-      owner: Alice
-      desc: 一个热爱技术的开发者
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Alice
-      color: '#BEDCFF'
-      group: familiar
-    - site: 示例博客 B
-      url: https://example-b.com
-      owner: Bob
-      desc: 分享生活与技术的小站
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Bob
-      color: '#FBC1CC'
-      group: community
-    - site: 示例博客 C
-      url: https://example-c.com
-      owner: Carol
-      desc: 记录学习与成长的地方
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Carol
-      color: '#ABDCFF'
-      group: community
-    - site: 示例博客 D
-      url: https://example-d.com
-      owner: Dave
-      desc: 喜欢折腾键盘和终端
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Dave
-      color: '#C8E6C9'
-      group: community
-    - site: 示例博客 E
-      url: https://example-e.com
-      owner: Eve
-      desc: 设计、插画与日常碎碎念
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Eve
-      color: '#E1BEE7'
-      group: following
-    - site: 示例博客 F
-      url: https://example-f.com
-      owner: Frank
-      desc: 长文写作与阅读笔记
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Frank
-      color: '#FFE0B2'
-      group: following
-    # 不写 group（或写了不存在的分组 id）的友链会归入最后的「未分组」
-    - site: 示例博客 G
-      url: https://example-g.com
-      owner: Grace
-      desc: 还没想好放在哪一组的新朋友
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Grace
-      color: '#B2EBF2'
+    []
+    # - site: 示例博客 A
+    #   url: https://example-a.com
+    #   owner: Alice
+    #   desc: 一个热爱技术的开发者
+    #   image: https://api.dicebear.com/7.x/avataaars/svg?seed=Alice
+    #   color: '#BEDCFF'
+    #   group: familiar
 
 # =============================================================================
 # Announcements
@@ -807,15 +742,9 @@ seo:
 # Christmas/Seasonal Features
 # =============================================================================
 bgm:
-  enabled: true  # (有 audio 时自动启用，显式 false 可禁用)
+  enabled: false # (有 audio 时自动启用，显式 false 可禁用)
   # metingApi: https://163.hyc.moe/  # Meting API 地址，默认为 https://163.hyc.moe/，推荐自部署
-  audio:
-    - title: 最爱山山
-      list:
-        - https://music.163.com/playlist?id=8676645748
-    - title: Love Vocaloid
-      list:
-        - https://music.163.com/playlist?id=8882890045
+  audio: []
 
 christmas:
   enabled: false # 总开关
@@ -843,8 +772,8 @@ christmas:
 #   label: 导航显示名称（可选，默认：追番）
 #   icon: 导航图标，Iconify 格式（可选，默认：ri:bilibili-fill）
 # -----------------------------------------------------------------------------
-bangumi:
-  userId: cosine
+# bangumi:
+#   userId: cosine
   # label: 追番
   # icon: ri:bilibili-fill
 
