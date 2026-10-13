@@ -1,8 +1,9 @@
-/* 女仆咖啡厅页脚：女仆黑底白字 + 粉色猫爪 */
+/* 女仆咖啡厅页脚：颜色走主题变量，随亮/暗模式变化 */
 .footer-maid {
   margin-top: auto;
   padding: 2.25rem 0 2rem;
-  background: #1f1f23;
+  background: hsl(var(--footer));
+  border-top: 1px solid hsl(var(--border) / 0.6);
   color: rgb(255 255 255 / 0.85);
 }
 
