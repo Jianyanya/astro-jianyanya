@@ -71,6 +71,8 @@ categoryMap:
   笔记: note
   工具: tools
   周刊: weekly
+  项目: project
+  题解: solution
   # Secondary categories (for nested paths)
   前端: front-end
   CSS: css

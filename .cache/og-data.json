@@ -61,5 +61,60 @@
       "logo": "https://book.cosine.ren/~gitbook/image?url=https%3A%2F%2F934551782-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FSKmC7C4KtqVvJxUTVKwQ%252Ficon%252FWcaoWRW35EESs2lJLWyW%252Ftx.jpg%3Falt%3Dmedia%26token%3Dde2dd12e-60c6-4078-8049-1f37d3c7e3ec&width=48&height=48&sign=f362d5b490eeeab73148e3c4b0c680c3&sv=3"
     },
     "timestamp": 1791303373964
+  },
+  "https://github.com/AstrBotDevs/AstrBot": {
+    "data": {
+      "originUrl": "https://github.com/AstrBotDevs/AstrBot",
+      "url": "https://github.com/AstrBotDevs/AstrBot",
+      "title": "GitHub - AstrBotDevs/AstrBot: AI Agent Assistant & development framework that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨",
+      "description": "AI Agent Assistant & development framework that integrates lots of IM platforms, LLMs, plugins and AI feature, and can be your openclaw alternative. ✨ - AstrBotDevs/AstrBot",
+      "image": "https://opengraph.githubassets.com/bcb500f903c575152de2adb1a44f73d0e202a8d124acc5f0178359ce8e8d0317/AstrBotDevs/AstrBot",
+      "logo": "https://github.com/fluidicon.png"
+    },
+    "timestamp": 1791903179050
+  },
+  "https://github.com/CuteLeaf/Firefly": {
+    "data": {
+      "originUrl": "https://github.com/CuteLeaf/Firefly",
+      "url": "https://github.com/CuteLeaf/Firefly",
+      "title": "GitHub - CuteLeaf/Firefly: 🍀Firefly, fresh and aesthetic Astro blog theme template.",
+      "description": "🍀Firefly, fresh and aesthetic Astro blog theme template. - CuteLeaf/Firefly",
+      "image": "https://repository-images.githubusercontent.com/1074250582/e8d5b2c1-80f9-4e34-ba18-525563852ec3",
+      "logo": "https://github.com/fluidicon.png"
+    },
+    "timestamp": 1791903179057
+  },
+  "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber": {
+    "data": {
+      "originUrl": "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber",
+      "url": "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber",
+      "title": "GitHub - Open-LLM-VTuber/Open-LLM-VTuber: Talk to any LLM with hands-free voice interaction, voice interruption, and Live2D avatar running locally across platforms",
+      "description": "Talk to any LLM with hands-free voice interaction, voice interruption, and Live2D avatar running locally across platforms - Open-LLM-VTuber/Open-LLM-VTuber",
+      "image": "https://repository-images.githubusercontent.com/722844356/70b58869-a621-4db9-a371-387e6cdf9dcf",
+      "logo": "https://github.com/fluidicon.png"
+    },
+    "timestamp": 1791903179293
+  },
+  "https://github.com/JOYCEQL/magic-resume": {
+    "data": {
+      "originUrl": "https://github.com/JOYCEQL/magic-resume",
+      "url": "https://github.com/JOYCEQL/magic-resume",
+      "title": "GitHub - JOYCEQL/magic-resume: free online AI resume editor，the only official website is https://magicv.art",
+      "description": "free online AI resume editor，the only official website is https://magicv.art - JOYCEQL/magic-resume",
+      "image": "https://repository-images.githubusercontent.com/802821703/ee9a31af-b010-4a6d-84aa-e984a45cac16",
+      "logo": "https://github.com/fluidicon.png"
+    },
+    "timestamp": 1791903179336
+  },
+  "https://github.com/lobehub/lobe-vidol": {
+    "data": {
+      "originUrl": "https://github.com/lobehub/lobe-vidol",
+      "url": "https://github.com/lobehub/lobe-vidol",
+      "title": "GitHub - lobehub/lobe-vidol: 🧸 Lobe Vidol - Making Virtual Idols Accessible for EveryOne",
+      "description": "🧸 Lobe Vidol - Making Virtual Idols Accessible for EveryOne - lobehub/lobe-vidol",
+      "image": "https://repository-images.githubusercontent.com/784800776/aacc00e0-5ad7-4135-92c8-3da6e70312fd",
+      "logo": "https://github.com/fluidicon.png"
+    },
+    "timestamp": 1791903183762
   }
 }
