@@ -17,6 +17,6 @@ Goaigo
 https://github.com/lobehub/lobe-vidol
 https://github.com/Open-LLM-VTuber/Open-LLM-VTuber
 # AstrBot 账户
-astrbot,密码: Qzh20060413
+（账户信息已隐去）
 
 ![](/img/posts/llm-models-paste1.png)
