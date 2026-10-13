@@ -1,71 +1,71 @@
 /* shadCN theme - https://ui.shadcn.com/themes */
 @layer base {
   :root {
-    /* Neutrals lean toward the sakura hue so greys and the pink accent read as one palette. */
-    --background: 0 12% 99%;
-    --foreground: 340 10% 18%;
+    /* 女仆咖啡厅配色：奶油白底 + 女仆红主色 + 琥珀金点缀，60% 中性 + 30% 红/黑 + 10% 金/粉 */
+    --background: 33 100% 97%; /* #FFF8F0 奶油白 */
+    --foreground: 0 0% 17%; /* #2B2B2B 深灰 */
 
-    --card: 0 12% 99%;
-    --card-foreground: 340 12% 12%;
+    --card: 0 0% 100%; /* #FFFFFF 纯白卡片 */
+    --card-foreground: 0 0% 17%;
 
-    --popover: 0 12% 99%;
-    --popover-foreground: 340 12% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 17%;
 
-    --primary: 351 77% 62%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 0 51% 48%; /* #B83B3B 女仆红 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 340 22% 95.5%;
-    --secondary-foreground: 340 12% 12%;
+    --secondary: 0 64% 90%; /* #F6D6D6 腮红粉 */
+    --secondary-foreground: 0 53% 30%;
 
-    --muted: 340 22% 95.5%;
-    --muted-foreground: 340 6% 36%;
+    --muted: 33 60% 95%;
+    --muted-foreground: 16 12% 38%; /* #6B5B55 暖灰 */
 
-    --accent: 340 30% 94.5%;
-    --accent-foreground: 340 12% 12%;
+    --accent: 0 64% 92%; /* 浅粉 hover 背景 */
+    --accent-foreground: 0 53% 30%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 340 16% 90%;
-    --input: 340 16% 90%;
-    --ring: 346.8 77.2% 49.8%;
+    --border: 28 38% 86%; /* #E8D9CC 浅暖边 */
+    --input: 28 38% 86%;
+    --ring: 0 51% 48%; /* 女仆红 */
 
-    --badge-primary: 351 49% 50%;
+    --badge-primary: 0 51% 48%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Night sakura: plum-indigo neutrals under an unchanged pink accent; text is kept below pure white to cut glare. */
-    --background: 256 18% 13%;
-    --foreground: 300 14% 93%;
+    /* 女仆黑夜间配色：暖黑骨架 + 提亮的女仆红，避免满屏纯黑 */
+    --background: 240 6% 10%;
+    --foreground: 30 20% 92%;
 
-    --card: 256 18% 15%;
-    --card-foreground: 300 14% 93%;
+    --card: 240 6% 13%; /* #1F1F23 女仆黑 */
+    --card-foreground: 30 20% 92%;
 
-    --popover: 257 20% 16%;
-    --popover-foreground: 300 14% 93%;
+    --popover: 240 6% 15%;
+    --popover-foreground: 30 20% 92%;
 
-    --primary: 350 77% 70%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 0 58% 60%; /* 暗色下提亮的女仆红 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 258 16% 21%;
-    --secondary-foreground: 300 14% 96%;
+    --secondary: 240 5% 20%;
+    --secondary-foreground: 30 20% 90%;
 
-    --muted: 258 16% 21%;
-    --muted-foreground: 262 10% 68%;
+    --muted: 240 5% 18%;
+    --muted-foreground: 30 8% 65%;
 
-    --accent: 258 18% 23%;
-    --accent-foreground: 300 14% 96%;
+    --accent: 240 5% 20%;
+    --accent-foreground: 30 20% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+    --destructive: 0 62.8% 40%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 258 14% 25%;
-    --input: 258 14% 25%;
-    --ring: 346.8 77.2% 49.8%;
+    --border: 240 5% 24%;
+    --input: 240 5% 24%;
+    --ring: 0 58% 60%;
 
-    --badge-primary: 350 77% 70%;
+    --badge-primary: 0 58% 60%;
 
     --radius: 0.75rem;
   }

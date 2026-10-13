@@ -11,24 +11,25 @@
 # Site Basic Information
 # =============================================================================
 site:
-  title: 余弦の博客 # 网站名称
-  alternate: cosine # 网站英文名称 用于页脚、Logo、@ handle 等
-  subtitle: WA 的一声就哭了 # 网站副标题
-  name: cos # 作者名称 - 请修改为你的名字
-  description: 一个基于 Astro 的现代化博客主题 # 网站描述
+  title: 铃月の小屋 # 网站名称
+  alternate: jianyanya # 网站英文名称 用于页脚、Logo、@ handle 等
+  subtitle: 欢迎光临～今天的甜点也想和你分享 # 网站副标题
+  name: jianyanya # 作者名称
+  description: 红金暖调的女仆咖啡厅风格博客 / 猫娘元素 / 记录生活与技术
   avatar: /img/avatar.webp # 网站头像
   showLogo: false # 是否显示图形 Logo；默认显示站点名称，启用后可替换 src/assets/svg/logo.svg
-  author: Author # 作者名称 - 请修改为你的名字
-  url: https://koharu.cosine.ren # 站点 URL 用于 RSS 和 SEO
+  author: jianyanya # 作者名称
+  url: https://koharu.cosine.ren # 站点 URL 用于 RSS 和 SEO（部署后改为你的正式域名）
   defaultOgImage: /img/avatar.webp # 默认 Open Graph 图片
-  startYear: 2024 # 建站年份
+  startYear: 2026 # 建站年份
   timezone: Asia/Shanghai # 时区配置 (IANA 格式)，用于日期显示和处理
   keywords: # SEO 关键词 (全局)
     - 博客
     - Astro
     - 技术
-    - 前端
-    # 请根据你的网站内容添加关键词
+    - 生活
+    - 猫娘
+    - 女仆咖啡厅
   # breadcrumbHome: 首页  # 面包屑导航中首页的显示名称（默认: '首页'）
   # icp:                         # ICP 备案号（可自定义链接）
   #   text: "粤ICP备xxxxxxxxxx号"
@@ -166,7 +167,7 @@ featuredSeries:
 # -----------------------------------------------------------------------------
 social:
   github:
-    url: https://github.com/your-username # 替换为你的 GitHub 链接
+    url: https://github.com/Jianyanya # 替换为你的 GitHub 链接
     icon: ri:github-fill # Remix Icon 的 GitHub 图标
     color: '#191717' # (可选) 图标颜色
   email:

@@ -59,6 +59,10 @@
   blockquote {
     font-style: normal;
     font-weight: 400;
+    border-left: 4px solid hsl(var(--primary));
+    background: hsl(var(--secondary) / 0.5);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.25rem 1rem;
 
     p:first-of-type::before,
     p:last-of-type::after {

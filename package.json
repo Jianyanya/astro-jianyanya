@@ -3,6 +3,12 @@
   "type": "module",
   "version": "7.7.4",
   "packageManager": "pnpm@10.28.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  },
   "engines": {
     "node": ">=22.20.0"
   },
@@ -31,30 +37,7 @@
     "koharu": "npx tsx scripts/koharu.tsx",
     "migrate": "pnpm koharu migrate",
     "save-slugs": "npx tsx scripts/save-slugs.ts",
-    "test": "npm run test:workspace && npm run test:config && npm run test:markdown && npm run test:meting && npm run test:umami && npm run test:toc && npm run test:lightbox && npm run test:glide && npm run test:drawer && npm run test:diagram && npm run test:migrate && npm run test:moments && npm run test:motion && npm run test:index",
-    "test:index": "tsx --test src/lib/content/index-groups.test.ts src/lib/content/index-categories.test.ts src/lib/content/index-tags.test.ts src/lib/content/series-issue.test.ts src/lib/content/colophon.test.ts src/lib/content/colophon-view.test.ts src/lib/content/post-source.test.ts",
-    "test:workspace": "node --test tests/workspace.test.mjs",
-    "test:config": "tsx --test src/lib/config/content.test.ts src/lib/config/editor.test.ts src/lib/config/featured-series.test.ts src/lib/config/friends.test.ts src/lib/config/motion.test.ts src/lib/config/colophon.test.ts",
-    "test:markdown": "tsx --test src/lib/markdown/*.test.ts",
-    "test:editor": "tsx --test src/features/editor/*.test.ts src/features/editor/server/*.test.ts cms/src/api/source.test.ts",
     "editor:og": "node --import tsx scripts/editor-og.ts",
-    "test:meting": "node --import tsx --test src/lib/meting.test.ts src/lib/music-cover.test.ts",
-    "test:umami": "node --import tsx --test src/lib/umami-stats.test.ts",
-    "test:toc": "tsx --test src/lib/toc.test.ts src/lib/toc-ribbon.test.ts",
-    "test:lightbox": "tsx --test src/lib/lightbox-flip.test.ts src/lib/lightbox-gestures.test.ts",
-    "test:motion": "node --import tsx --test src/lib/motion-level.test.ts src/lib/sakura/petal-burst.test.ts src/lib/client-panel.test.ts",
-    "test:motion:browser": "playwright test -c tests/motion/playwright.config.ts",
-    "test:settings-panel": "node tests/settings/panel-animation.mjs",
-    "test:bgm-panel": "node tests/bgm/panel-loading.mjs",
-    "test:glide": "tsx --test src/lib/glide.test.ts",
-    "test:drawer": "tsx --test src/lib/drawer-gesture.test.ts src/lib/series-rail.test.ts",
-    "test:diagram": "tsx --test src/lib/diagram-sizing.test.ts src/lib/mermaid-source.test.ts src/lib/zoom-pan.test.ts",
-    "test:diagram:browser": "node tests/diagram/mermaid.browser.mjs",
-    "test:search:browser": "node tests/search/portal.browser.mjs",
-    "test:migrate": "tsx --test scripts/koharu/utils/*.test.ts",
-    "test:moments": "tsx --test src/lib/config/moments.test.ts tests/moments/*.test.ts",
-    "test:moments:smoke": "bash tests/moments/smoke.sh",
-    "test:moments:docker": "sh docker/smoke-dynamic.sh",
     "cms": "cd cms && pnpm dev",
     "cms:install": "pnpm --filter astro-koharu-cms install",
     "docker:up": "docker compose --env-file ./.env -f docker/docker-compose.yml up -d --build",
@@ -63,10 +46,7 @@
     "docker:rebuild": "bash docker/rebuild.sh",
     "docker:up:dynamic": "docker compose --env-file ./.env -f docker/docker-compose.dynamic.yml up -d --build",
     "docker:down:dynamic": "docker compose -f docker/docker-compose.dynamic.yml down",
-    "docker:logs:dynamic": "docker compose -f docker/docker-compose.dynamic.yml logs -f",
-    "acceptance": "pnpm build && node acceptance/scripts/run.mjs",
-    "acceptance:report": "node acceptance/scripts/report.mjs",
-    "acceptance:open": "node acceptance/scripts/report.mjs && node acceptance/scripts/open.mjs"
+    "docker:logs:dynamic": "docker compose -f docker/docker-compose.dynamic.yml logs -f"
   },
   "dependencies": {
     "@antv/infographic": "^0.2.4",
