@@ -54,11 +54,13 @@ i18n:
       label: 中文
     - code: en
       label: English
-      # enabled: false  # 内容存在但暂时禁用（保留内容但不生成路由）
+      enabled: false # 无翻译内容，暂时禁用（保留内容但不生成路由）
     - code: ja
       label: 日本語
+      enabled: false # 无翻译内容，暂时禁用
     - code: ko
       label: 한국어
+      enabled: false # 无翻译内容，暂时禁用
 
 # =============================================================================
 # Category Map
@@ -795,7 +797,7 @@ comment:
 # -----------------------------------------------------------------------------
 analytics:
   umami:
-    enabled: true
+    enabled: false # 未部署自己的 Umami 前先关闭，避免无效请求
     id: your-umami-id
     endpoint: https://stats.example.com
     # statistics_display:
