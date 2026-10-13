@@ -6,7 +6,7 @@ catalog: true
 tags:
   - "决策树"
 categories:
-  - "项目"
+  - "自习室占座系统"
 ---
 先把这三者分清：
 

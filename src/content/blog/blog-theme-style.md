@@ -1,16 +1,16 @@
 ---
 title: "博客主题样式设计"
 link: "blog-theme-style"
-date: 2026-10-13 22:38:00
+date: 2026-10-13 23:19:00
 catalog: true
 tags:
   - "博客"
 categories:
-  - "随笔"
+  - "博客建设"
 ---
 ## 整体 
 
-博客作者名改成我,叫 jianyanya
+博客作者名叫 jianyanya
 域名就是 Belluna.jjy
 **日系轻甜女仆咖啡厅 + 红金暖调 + 少量猫娘元素**  
 红是主角，金是亮点，黑白是骨架，粉是糖。  

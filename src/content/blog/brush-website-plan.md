@@ -6,7 +6,7 @@ catalog: true
 tags:
   - "刷题"
 categories:
-  - "笔记"
+  - "刷题计划"
 ---
 # 校队算法刷题网站实施计划书
 

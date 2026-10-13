@@ -71,7 +71,11 @@ categoryMap:
   笔记: note
   工具: tools
   周刊: weekly
-  项目: project
+  自习室占座系统: seat-system
+  复合对话Agent: glowspire-agent
+  铃月AI助手: lingyue-assistant
+  博客建设: blog-dev
+  刷题计划: brush-plan
   题解: solution
   # Secondary categories (for nested paths)
   前端: front-end
@@ -140,6 +144,55 @@ featuredSeries:
     cover: /img/weekly_header.webp # 系列页面头图
     enabled: true # 启用此系列
     icon: ri:newspaper-line # 导航图标
+  - slug: seat-system # URL 路径: /seat-system
+    categoryName: 自习室占座系统
+    label: 自习室占座系统
+    fullName: 基于 WiFi 指纹的自习室占座系统
+    description: |
+      用 WiFi 指纹做社区自习室的座位引导与占座检测，
+      涉及 KNN 与决策树两种算法的实现与对照实验。
+    cover: /img/cover/3.webp
+    enabled: true
+    icon: ri:wifi-fill
+    highlightOnHome: false
+  - slug: glowspire-agent # URL 路径: /glowspire-agent
+    categoryName: 复合对话Agent
+    label: 复合对话Agent
+    fullName: 复合对话 Agent 项目
+    description: |
+      Glowspire —— 名字取自 Glow（萤火微光）与 spire（低语/螺旋），
+      复合对话 Agent 的设计、模型与训练记录。
+    cover: /img/cover/5.webp
+    enabled: true
+    icon: ri:robot-2-fill
+    highlightOnHome: false
+  - slug: lingyue-assistant # URL 路径: /lingyue-assistant
+    categoryName: 铃月AI助手
+    label: 铃月AI助手
+    fullName: 铃月AI助手
+    description: 以铃月为原型的私人 AI 助手，帮我管理所有的信息。
+    cover: /img/cover/7.webp
+    enabled: true
+    icon: ri:sparkling-2-fill
+    highlightOnHome: false
+  - slug: blog-dev # URL 路径: /blog-dev
+    categoryName: 博客建设
+    label: 博客建设
+    fullName: 博客建设
+    description: 这个博客本身的设计与开发记录。
+    cover: /img/cover/9.webp
+    enabled: true
+    icon: ri:quill-pen-fill
+    highlightOnHome: false
+  - slug: brush-plan # URL 路径: /brush-plan
+    categoryName: 刷题计划
+    label: 刷题计划
+    fullName: 刷题计划
+    description: 算法刷题网站的规划与安排。
+    cover: /img/cover/13.webp
+    enabled: true
+    icon: ri:code-box-fill
+    highlightOnHome: false
   # 示例：添加第二个系列（取消注释启用）
   # - slug: reading # URL 路径: /reading
   #   categoryName: 书摘
@@ -552,6 +605,24 @@ navigation:
         nameKey: nav.archives
         path: /archives
         icon: ri:archive-2-fill
+  - name: 项目
+    icon: ri:folder-3-fill
+    children:
+      - name: 自习室占座系统
+        path: /seat-system
+        icon: ri:wifi-fill
+      - name: 复合对话Agent
+        path: /glowspire-agent
+        icon: ri:robot-2-fill
+      - name: 铃月AI助手
+        path: /lingyue-assistant
+        icon: ri:sparkling-2-fill
+      - name: 博客建设
+        path: /blog-dev
+        icon: ri:quill-pen-fill
+      - name: 刷题计划
+        path: /brush-plan
+        icon: ri:code-box-fill
   - name: 友链
     nameKey: nav.friends
     path: /friends
