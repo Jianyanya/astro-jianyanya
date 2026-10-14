@@ -48,9 +48,9 @@ export const icpConfig: { text: string; link?: string } | undefined = (() => {
 const { title, alternate, subtitle } = siteConfig;
 
 // Browser tab / SEO title for pages without a specific title.
-// The motto subtitle is intentionally excluded — it renders on the cover, not in the tab.
+// Customized: 用户名 = 站点中文名 = 寓意（不含英文行，避免过长）
 export const seoConfig = {
-  title: title,
+  title: `${alternate ? `${alternate} = ` : ''}铃月の小屋 = 铃响之处，月色回应。`,
   description: siteConfig.description,
   keywords: siteConfig?.keywords?.join(',') ?? '',
   url: siteConfig.site,
