@@ -231,6 +231,14 @@ social:
     url: /rss.xml # 站内 RSS 订阅地址
     icon: ri:rss-line
     color: '#ff6600'
+  bilibili:
+    url: https://space.bilibili.com/1465642004
+    icon: ri:bilibili-fill
+    color: '#da708a'
+  youtube:
+    url: https://www.youtube.com/@jianyan-u7x8w
+    icon: ri:youtube-fill
+    color: '#ff0000'
   # -------------------------------------------------------------------------
   # 以下是更多可选的社交平台配置示例，取消注释并修改即可启用：
   # -------------------------------------------------------------------------
