@@ -16,7 +16,7 @@ site:
   subtitle: |-
     Where the bell rings, the moon answers.
     铃响之处，月色回应。
-  name: belluna # 作者显示名
+  name: jianyanya # 作者显示名
   description: 铃月助手/算法/强迫症/二次元重度爱好者
   avatar: /img/avatar.webp # 网站头像
   showLogo: false # 是否显示图形 Logo；默认显示站点名称，启用后可替换 src/assets/svg/logo.svg

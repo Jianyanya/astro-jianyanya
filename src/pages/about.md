@@ -17,9 +17,9 @@ description: "关于我～"
 
 ![铃月](/img/log.png)
 
-记录生活与技术，写写随想，也折腾前端。
+记录生活与技术,探究 AI 模型训练,热衷做出自己满意的另一半,做做 agent,也时不时打打算法
 
-> 愿热情永存，愿热爱不灭，愿生活无憾
+> We can't change what's done, we can only move on.
 
 ### 找到我
 
