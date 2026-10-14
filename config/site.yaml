@@ -737,7 +737,16 @@ navigation:
     # path: # 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
     # lang: # 语言 (默认: 'zh-CN')
 comment:
-  provider: none  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
+  provider: giscus # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
+  giscus:
+    repo: Jianyanya/astro-jianyanya # GitHub 仓库名 (owner/repo 格式)
+    repoId: R_kgDOVHS8jw # 仓库 ID
+    category: Announcements # Discussion 分类名称
+    categoryId: DIC_kwDOVHS8j84DIYER # 分类 ID
+    mapping: pathname # 映射方式
+    reactionsEnabled: '1' # 启用 reactions
+    inputPosition: top # 输入框位置
+    lang: zh-CN # 语言
   # remark42:
   #   host: https://comment.example.com/
   #   siteId: your-site-id
