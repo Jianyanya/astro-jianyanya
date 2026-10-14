@@ -137,7 +137,10 @@ function extractSlug(filePath: string, link?: string): string {
 
 async function checkApiRunning(): Promise<boolean> {
   try {
-    const response = await fetch(`${API_BASE_URL}models`);
+    // Cloud providers reject keyless /models probes with 401, so send the key.
+    const response = await fetch(`${API_BASE_URL}models`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
     return response.ok;
   } catch {
     return false;
