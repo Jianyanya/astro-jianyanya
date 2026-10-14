@@ -151,7 +151,7 @@ async function generateSummary(text: string, model: string): Promise<string> {
   // Truncate text to avoid token limits
   const truncatedText = text.slice(0, 6000);
 
-  const { text: summary } = await generateText({
+  const { text: summary, reasoningText } = await generateText({
     apiKey: API_KEY,
     baseURL: API_BASE_URL,
     model,
@@ -167,13 +167,17 @@ async function generateSummary(text: string, model: string): Promise<string> {
       },
     ],
     temperature: 0.3,
-    maxTokens: 200,
+    maxTokens: 2000,
+    // Thinking models (e.g. DeepSeek V4) default to high effort and can burn the
+    // whole token budget on reasoning, leaving the content empty.
+    reasoning_effort: 'low',
   });
 
-  if (!summary) {
+  const finalSummary = summary?.trim() || reasoningText?.trim();
+  if (!finalSummary) {
     throw new Error('No summary received from LLM response');
   }
-  return summary.trim();
+  return finalSummary;
 }
 
 // --------- File Processing ---------
