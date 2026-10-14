@@ -10,6 +10,11 @@ description: "关于我～"
 
 欢迎来到「铃月の小屋」～ 一间红金暖调的小小女仆咖啡厅，偶尔有猫娘出没 🐾
 
+> **Where the bell rings, the moon answers.**
+> **铃响之处，月色回应。**
+
+—— 这是 Belluna（铃月）这个名字的寓意。
+
 ![铃月](/img/log.png)
 
 记录生活与技术，写写随想，也折腾前端。

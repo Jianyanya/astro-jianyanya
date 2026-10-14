@@ -22,24 +22,26 @@ const hasData = hasSimilarityData();
 const allPosts = await getSortedPosts(locale);
 const totalPosts = allPosts.length;
 
+// Prepare post pools for client-side randomization (posts may opt out via excludeFromRandom)
+const randomPool = allPosts.filter((p) => !p.data?.excludeFromRandom);
+const poolItems = randomPool.map(toPostRefWithCategory);
+const poolTotal = poolItems.length;
+const leftPool = poolTotal <= 10 ? poolItems : poolItems.slice(0, Math.floor(poolTotal / 2));
+const rightPool = poolTotal <= 10 ? poolItems : poolItems.slice(Math.floor(poolTotal / 2));
+
 // Calculate how many posts to show on each side
 // For <= 10 posts: split evenly (e.g., 8 posts = 4 left + 4 right)
 // For > 10 posts: 5 on each side from left/right halves
-const leftCount = totalPosts <= 10 ? Math.ceil(totalPosts / 2) : 5;
-const rightCount = totalPosts <= 10 ? Math.floor(totalPosts / 2) : 5;
-
-// Prepare post pools for client-side randomization
-const allPostItems = allPosts.map(toPostRefWithCategory);
-const leftPool = totalPosts <= 10 ? allPostItems : allPostItems.slice(0, Math.floor(totalPosts / 2));
-const rightPool = totalPosts <= 10 ? allPostItems : allPostItems.slice(Math.floor(totalPosts / 2));
+const leftCount = poolTotal <= 10 ? Math.ceil(poolTotal / 2) : 5;
+const rightCount = poolTotal <= 10 ? Math.floor(poolTotal / 2) : 5;
 
 // Get related posts if current post is provided and similarity data exists
 const relatedPosts = hasData && post ? getRelatedPosts(post, allPosts, 5).map(toPostRefWithCategory) : [];
 ---
 
 <div class="tablet:grid-cols-1 grid grid-cols-2 gap-4 px-10 md:px-6">
-  {totalPosts <= 10 ? (
-    <PostFooterLists client:visible allPosts={allPostItems} relatedPosts={relatedPosts} leftCount={leftCount} rightCount={rightCount} locale={locale} />
+  {poolTotal <= 10 ? (
+    <PostFooterLists client:visible allPosts={poolItems} relatedPosts={relatedPosts} leftCount={leftCount} rightCount={rightCount} locale={locale} />
   ) : (
     <>
       <RandomPostList client:visible postsPool={leftPool} count={leftCount} locale={locale} />

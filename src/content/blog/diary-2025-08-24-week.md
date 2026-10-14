@@ -3,10 +3,11 @@ title: "2025-08-24 周记"
 link: "diary-2025-08-24-week"
 date: 2025-08-24 12:00:00
 catalog: true
+excludeFromRandom: true
 tags:
   - "学习日记"
 categories:
-  - "笔记"
+  - ["笔记"]
 ---
 ## 今日学习记录
 ### 1. 跳跃游戏 9[leetcode.3660](https://leetcode.cn/problems/jump-game-ix)

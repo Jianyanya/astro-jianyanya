@@ -6,7 +6,7 @@ catalog: true
 tags:
   - "日常"
 categories:
-  - "随笔"
+  - ["随笔"]
 ---
 ## 青阅占座系统
 - KNN 算法和决策树算法的实现

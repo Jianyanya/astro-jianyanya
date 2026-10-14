@@ -1,19 +1,19 @@
 ---
 title: "自习室占座项目的KNN算法实现"
 link: "wifi-knn-impl"
-date: 2026-10-10 11:25:00
+date: 2026-10-14 10:33:00
 catalog: true
 tags:
   - "KNN"
   - "WiFi指纹"
 categories:
-  - "自习室占座系统"
+  - ["项目", "自习室占座系统"]
 ---
 这个项目实现的是 **“多参考指纹的加权 KNN + 设备 RSSI 偏移适配 + 可信度判断”**。
 
 它解决的问题是：**手机扫描到一组 WiFi 信号后，判断这组信号最像哪个座位上采集的信号。**
 
-**算法里的数据是什么。**
+## 算法里的数据是什么
 
 **WiFi 指纹**是一组 AP 的信号强度。这里 AP 可以简单理解为无线接入点，RSSI 是手机测到的接收信号强度，通常为负数：
 - `-40 dBm` 比较强。
@@ -36,7 +36,7 @@ categories:
 
 ---
 
-先看整体流程，可以分为离线建库和在线匹配两部分：
+## 先看整体流程，可以分为离线建库和在线匹配两部分
 
 ```mermaid
 flowchart TD
@@ -59,9 +59,7 @@ flowchart TD
     N --> O[输出候选座位和人工复核标记]
 ```
 
-**第一步，把扫描数据整理成可以比较的向量。**
-
-对应 [preprocessing.py (line 155)](/E:/wiferoom/algorithm-service/app/preprocessing.py:155) 中的 `prepare_vector()`。
+## **第一步，把扫描数据整理成可以比较的向量**
 
 原始扫描中，每个 AP 至少有两个重要字段：
 ```plain
@@ -123,9 +121,7 @@ AP4 = -65
 
 ---
 
-**第二步，离线建立“座位参考指纹库”。**
-
-对应 [pipeline.py (line 200)](/E:/wiferoom/algorithm-service/app/pipeline.py:200)。
+## **第二步，离线建立“座位参考指纹库”**
 
 KNN 的主要工作是保存参考样本，预测时与参考样本比较。因此这个项目所谓的“训练”，主要包括：
 - 估计训练设备的偏移。
@@ -161,7 +157,7 @@ A-01 晚间参考指纹
 同座位、同时段的多个窗口 → 平均数
 ```
 
-当前保存的 [knn-v2-device-safe-20261009.json](E:/wiferoom/algorithm-service/models/knn-v2-device-safe-20261009.json) 包含：
+当前保存的实现的包含：
 
 |内容|数量|
 |---|---|
@@ -178,9 +174,7 @@ A-01 晚间参考指纹
 
 ---
 
-**第三步，训练设备之间先做 RSSI 偏移校正。**
-
-对应 [pipeline.py (line 18)](/E:/wiferoom/algorithm-service/app/pipeline.py:18) 的 `calibrate_device_offsets()`。
+## **第三步，训练设备之间先做 RSSI 偏移校正**
 
 不同手机在同一位置测到的 RSSI 可能整体不同，例如：
 
@@ -237,22 +231,20 @@ B：[-56,-66,-76] -(-3)= [-53,-63,-73]
 
 ---
 
-**第四步，计算每个 AP 的重要程度。**
-
-对应 [pipeline.py (line 143)](/E:/wiferoom/algorithm-service/app/pipeline.py:143) 的 `estimate_ap_weights()`。
+## **第四步，计算每个 AP 的重要程度**
 
 直观上：
 
 - 如果某个 AP 在所有座位上都是 `-60` 左右，它不太能区分座位。
 - 如果另一个 AP 在不同座位上从 `-40` 变化到 `-80`，它可能更有区分能力。
 
-代码计算每个 AP 在参考指纹中的标准差 \(\sigma_i\)，忽略缺失值，然后转换成权重：
+代码计算每个 AP 在参考指纹中的标准差 $(\sigma_i)$，忽略缺失值，然后转换成权重：
 
-\[ w_i=0.2+0.8\frac{\sigma_i}{\max_j\sigma_j} \]
+$[ w_i=0.2+0.8\frac{\sigma_i}{\max_j\sigma_j} ]$
 
 所以 AP 权重落在：
 
-\[ [0.2,1.0] \]
+$[ [0.2,1.0] ]$
 
 这里准确地说使用的是**标准差**；文件顶部部分说明写成了方差，以实际函数为准。
 
@@ -260,23 +252,23 @@ B：[-56,-66,-76] -(-3)= [-53,-63,-73]
 
 ---
 
-**第五步，计算当前指纹与每条参考指纹的距离。**
+## **第五步，计算当前指纹与每条参考指纹的距离**
 
 这一步分为已登记设备和新设备两种情况。
 
 对于模型里已有偏移的设备，先减去设备偏移，再计算加权均方根距离：
 
-\[ d(q,r)= \sqrt{ \frac{\sum_i w_i'(q_i-r_i)^2} {\sum_i w_i'} } \]
+$[ d(q,r)= \sqrt{ \frac{\sum_i w_i'(q_i-r_i)^2} {\sum_i w_i'} } ]$
 
 其中：
 
-- \(q_i\)：当前手机校正后的第 \(i\) 个 AP 信号。
-- \(r_i\)：参考指纹对应信号。
-- \(w_i'\)：本次比较使用的 AP 权重。
+- $(q_i)$：当前手机校正后的第 \(i\) 个 AP 信号。
+- $(r_i)$：参考指纹对应信号。
+- $(w_i')$：本次比较使用的 AP 权重。
 
 如果当前查询没有扫到某个 AP，该维度的权重会乘以 `0.1`：
 
-\[ w_i'= \begin{cases} 0.1w_i,&q_i=-100\\ w_i,&其他 \end{cases} \]
+$[ w_i'= \begin{cases} 0.1w_i,&q_i=-100\\ w_i,&其他 \end{cases} ]$
 
 这样漏扫一个 AP 不会产生过大的影响，但也不会完全忽略缺失。
 
@@ -289,17 +281,13 @@ B：[-56,-66,-76] -(-3)= [-53,-63,-73]
 
 则：
 
-\[ d= \sqrt{\frac{2^2+1^2+(-2)^2}{3}} =\sqrt3 \approx1.732 \]
+$[ d= \sqrt{\frac{2^2+1^2+(-2)^2}{3}} =\sqrt3 \approx1.732 ]$
 
 距离越小，两组信号越接近。
 
-实现位置是 [fingerprint.py (line 95)](/E:/wiferoom/algorithm-service/app/fingerprint.py:95)。
-
 ---
 
-**新设备的距离计算，是这次设备适配改动的核心。**
-
-对应 [fingerprint.py (line 105)](/E:/wiferoom/algorithm-service/app/fingerprint.py:105) 的 `_adapted_distances()`。
+### **新设备的距离计算，是这次设备适配改动的核心**
 
 新设备没有已知偏移。当前代码的做法是：
 
@@ -331,13 +319,13 @@ q-r = [5,5,5,5]
 
 然后估计偏移：
 
-\[ b_r= \operatorname{clip} \left( \operatorname{weightedMedian}_{i\in C_r}(q_i-r_i), -12,12 \right) \]
+$[ b_r= \operatorname{clip} \left( \operatorname{weightedMedian}_{i\in C_r}(q_i-r_i), -12,12 \right) ]$
 
 这里用 AP 权重计算加权中位数，降低个别异常 AP 的影响，并把结果限制在 `±12 dB`。
 
 接着计算扣除偏移后的残差：
 
-\[ e_r= \sqrt{ \frac{\sum_{i\in C_r}w_i(q_i-r_i-b_r)^2} {\sum_{i\in C_r}w_i} } \]
+$[ e_r= \sqrt{ \frac{\sum_{i\in C_r}w_i(q_i-r_i-b_r)^2} {\sum_{i\in C_r}w_i} } ]$
 
 如果各 AP 都近似相差 5，那么 \(b_r\approx5\)，\(e_r\approx0\)。
 
@@ -351,7 +339,7 @@ q-r = [5,5,5,5]
 
 最后构造用于 KNN 排序的距离：
 
-\[ d_r= \sqrt{e_r^2+0.02b_r^2} + 2\left(1-\frac{|C_r|}{|Q|}\right) \]
+$\$[ d_r= \sqrt{e_r^2+0.02b_r^2} + 2\left(1-\frac{|C_r|}{|Q|}\right) ]$
 
 其中 \(Q\) 是查询向量中有效 AP 的集合。
 
@@ -365,7 +353,7 @@ q-r = [5,5,5,5]
 
 即便“偏移 5 dB 后完全重合”，最终距离也不是零：
 
-\[ d=\sqrt{0.02\times5^2}\approx0.707 \]
+$\$[ d=\sqrt{0.02\times5^2}\approx0.707 ]$
 
 这是代码主动保留的偏移代价。
 
@@ -373,9 +361,7 @@ q-r = [5,5,5,5]
 
 ---
 
-**第六步，取最近的 K 条参考指纹，按座位投票。**
-
-对应 [fingerprint.py (line 160)](/E:/wiferoom/algorithm-service/app/fingerprint.py:160) 中的 `match()`。
+## **第六步，取最近的 K 条参考指纹，按座位投票**
 
 假设取出的 5 条最近参考是：
 
@@ -389,13 +375,13 @@ q-r = [5,5,5,5]
 
 每条参考的投票权重为：
 
-\[ v_j=\frac1{d_j+10^{-6}} \]
+$[ v_j=\frac1{d_j+10^{-6}} ]$
 
 距离越近，票越重。小常数用于避免除零。
 
 按座位汇总：
 
-\[ S(c)=\sum_{\substack{j\in TopK\\seat(j)=c}}v_j \]
+$[ S(c)=\sum_{\substack{j\in TopK\\seat(j)=c}}v_j ]$
 
 于是大约得到：
 
@@ -418,7 +404,7 @@ A-01 获胜。
 
 ---
 
-**第七步，判断这次结果有多可信。**
+## **第七步，判断这次结果有多可信**
 
 仅仅获得第一名还不够，因为每次比较总会有一个相对最好的候选，即使整体匹配质量很差。
 
@@ -432,7 +418,7 @@ A-01 获胜。
 
 特别注意 `separation`：
 
-\[ separation=d_2-d_1 \]
+$[ separation=d_2-d_1 ]$
 
 其中 \(d_2\) 来自**所有其他座位参考中的最近距离**，并不一定是投票第二名座位的距离，也不限于 Top-K 内的参考。
 
@@ -440,13 +426,13 @@ A-01 获胜。
 
 `vote_share` 为：
 
-\[ vote\_share=\frac{S(c_{\text{winner}})}{\sum_cS(c)} \]
+$[ vote\_share=\frac{S(c_{\text{winner}})}{\sum_cS(c)} ]$
 
 它只是投票得分占比，**不是预测正确概率**。
 
 当前保存的模型用逻辑回归估计可信度：
 
-\[ z=\beta_0+\beta_1d_1+\beta_2separation+\beta_3vote\_share \]\[ confidence=\frac1{1+e^{-z}} \]
+$[ z=\beta_0+\beta_1d_1+\beta_2separation+\beta_3vote\_share \]\[ confidence=\frac1{1+e^{-z}} ]$
 
 结果再限制在 `[0.01,0.99]`。
 
@@ -461,19 +447,15 @@ A-01 获胜。
 
 需要准确理解：这个输出是**根据已有数据拟合出的正确概率估计**，不是已经得到保证的真实场地正确率。尤其当前模型来自模拟数据，不能把一次输出 `0.99` 直接理解成实地一定有 99% 把握。
 
-还有一个值得指出的现状：当前模型的 \(d_1\) 系数是正值 `0.100526`。这说明模型没有保证“距离越大，可信度必然越低”，不能只凭直觉解释它。后续应使用真实数据检查概率校准效果。
-
 如果训练数据不足以拟合逻辑回归，例如没有同时包含预测正确和错误的样本，就退回启发式公式：
 
-\[ confidence= \sqrt{ \max(0,1-d_1/5) \cdot \operatorname{clip}(separation/2,0,1) } \]
+$[ confidence= \sqrt{ \max(0,1-d_1/5) \cdot \operatorname{clip}(separation/2,0,1) } ]$
 
 同样再限制输出范围。
 
-可信度拟合位于 [train_knn.py (line 143)](/E:/wiferoom/algorithm-service/scripts/train_knn.py:143)。
-
 ---
 
-**第八步，还有一些条件会直接要求人工复核。**
+## **第八步，还有一些条件会直接要求人工复核**
 
 即使上面的可信度估计较高，代码仍会检查证据是否充分。
 
@@ -561,7 +543,7 @@ needs_manual_review  = false
 
 ---
 
-**最后，把训练评估、运行代价和业务边界连起来看。**
+## **最后，把训练评估、运行代价和业务边界连起来看**
 
 目前训练采用严格的设备留出。例如用 A、B 设备训练，C 设备只做最终测试：
 
@@ -585,18 +567,18 @@ C 的数据：
 
 已登记设备的一次查询主要是：
 
-\[ O(NM+N\log N) \]
+$[ O(NM+N\log N) ]$
 
 前一项是计算所有距离，后一项是当前实现对所有参考完整排序。
 
 新设备需要为每条参考计算加权中位数，其中包含排序，大致为：
 
-\[ O(NM\log M+N\log N) \]
+$[ O(NM\log M+N\log N) ]$
 
-目前 \(N=144,M=12\)，这个规模很小，直接遍历匹配足够合适。
+目前规模较小，直接遍历匹配足够合适。
 
 在业务上，**KNN 输出的是“这台手机的信号最像哪个座位”，座位是否被占用还要结合连续命中、持续时间、会话和状态机判断。**
 
-当前 [CollectorService.java (line 213)](/E:/wiferoom/backend/src/main/java/com/wifiseat/collector/service/CollectorService.java:213) 已经做了保护：低可信度或需要复核时，清空连续命中计数，保持座位原状态；只有符合条件的在线匹配结果才继续进入占用判断。
+当前已经做了保护：低可信度或需要复核时，清空连续命中计数，保持座位原状态；只有符合条件的在线匹配结果才继续进入占用判断。
 
 因此，整个实现的关键不只是找最近样本，还包括：**先减少设备和测量噪声带来的差异，用多条参考共同支持一个座位，再对证据不足的结果保留人工复核。**

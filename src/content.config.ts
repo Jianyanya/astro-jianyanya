@@ -65,6 +65,8 @@ const blogCollection = defineCollection({
     tocNumbering: z.boolean().optional().default(true),
     // Allow posts to opt out of AI-generated summaries.
     excludeFromSummary: z.boolean().optional(),
+    // Allow posts to opt out of the random-posts pool in the post footer.
+    excludeFromRandom: z.boolean().optional(),
     // Shoka features per-post toggle
     math: z.boolean().optional(),
     quiz: z.boolean().optional(),

@@ -1,17 +1,18 @@
 ---
 title: "博客主题样式设计"
 link: "blog-theme-style"
-date: 2026-10-13 23:19:00
+date: 2026-10-14 10:12:00
 catalog: true
 tags:
   - "博客"
 categories:
-  - "博客建设"
+  - ["项目", "博客建设"]
 ---
+**Belluna**  
+Where the bell rings, the moon answers.  
+铃响之处，月色回应。
 ## 整体 
 
-博客作者名叫 jianyanya
-域名就是 Belluna.jjy
 **日系轻甜女仆咖啡厅 + 红金暖调 + 少量猫娘元素**  
 红是主角，金是亮点，黑白是骨架，粉是糖。  
 主题整体颜色建议配比: **60% 中性色 + 30% 红/黑 + 10% 金/粉**。

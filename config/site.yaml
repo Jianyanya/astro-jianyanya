@@ -15,11 +15,11 @@ site:
   alternate: jianyanya # 网站英文名称 用于页脚、Logo、@ handle 等
   subtitle: 欢迎光临～今天的甜点也想和你分享 # 网站副标题
   name: jianyanya # 作者名称
-  description: 红金暖调的女仆咖啡厅风格博客 / 猫娘元素 / 记录生活与技术
+  description: Where the bell rings, the moon answers. 铃响之处，月色回应。红金暖调的女仆咖啡厅风格博客 / 猫娘元素 / 记录生活与技术
   avatar: /img/avatar.webp # 网站头像
   showLogo: false # 是否显示图形 Logo；默认显示站点名称，启用后可替换 src/assets/svg/logo.svg
   author: jianyanya # 作者名称
-  url: https://astro-jianyanya.pages.dev # 站点 URL 用于 RSS 和 SEO（部署后改为你的正式域名）
+  url: https://belluna.love # 站点 URL 用于 RSS 和 SEO
   defaultOgImage: /img/avatar.webp # 默认 Open Graph 图片
   startYear: 2026 # 建站年份
   timezone: Asia/Shanghai # 时区配置 (IANA 格式)，用于日期显示和处理
@@ -71,8 +71,9 @@ categoryMap:
   # Primary categories
   随笔: life
   笔记: note
-  工具: tools
   周刊: weekly
+  项目: project
+  算法: algorithm
   自习室占座系统: seat-system
   复合对话Agent: glowspire-agent
   铃月AI助手: lingyue-assistant
@@ -107,15 +108,15 @@ featuredCategories:
   - link: note # 对应 categoryMap 中 笔记: note
     label: 笔记
     image: /img/cover/4.webp
-    description: 技术笔记、学习笔记
-  - link: note/front-end # 嵌套分类：笔记/前端
-    label: 前端
+    description: 学习日记、刷题打卡
+  - link: project # 对应 categoryMap 中 项目: project
+    label: 项目
     image: /img/cover/1.webp
-    description: 前端技术相关
-  - link: tools # 对应 categoryMap 中 工具: tools
-    label: 工具
-    image: /img/cover/11.webp
-    description: 工具使用、效率提升
+    description: 自习室占座、AI Agent、铃月助手等项目文档
+  - link: algorithm # 对应 categoryMap 中 算法: algorithm
+    label: 算法
+    image: /img/cover/6.webp
+    description: 算法题解与竞赛复盘
 
 # =============================================================================
 # Featured Series
@@ -223,7 +224,7 @@ social:
     icon: ri:github-fill # Remix Icon 的 GitHub 图标
     color: '#191717' # (可选) 图标颜色
   email:
-    url: mailto:your@email.com # 替换为你的邮箱，需加 mailto: 前缀
+    url: mailto:benbeny.tong@qq.com # 需加 mailto: 前缀
     icon: ri:mail-line
     color: '#55acd5'
   rss:

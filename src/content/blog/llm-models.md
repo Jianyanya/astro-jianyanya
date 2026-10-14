@@ -1,12 +1,12 @@
 ---
 title: "LLM 模型"
 link: "llm-models"
-date: 2026-09-29 17:28:00
+date: 2026-10-13 23:42:00
 catalog: true
 tags:
   - "LLM"
 categories:
-  - "复合对话Agent"
+  - ["项目", "复合对话Agent"]
 ---
 
 
@@ -17,6 +17,6 @@ Goaigo
 https://github.com/lobehub/lobe-vidol
 https://github.com/Open-LLM-VTuber/Open-LLM-VTuber
 # AstrBot 账户
-（账户信息已隐去）
+astrbot,密码: 
 
 ![](/img/posts/llm-models-paste1.png)

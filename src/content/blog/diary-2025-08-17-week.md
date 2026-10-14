@@ -3,10 +3,11 @@ title: "2025-08-17 周记"
 link: "diary-2025-08-17-week"
 date: 2025-08-17 12:00:00
 catalog: true
+excludeFromRandom: true
 tags:
   - "学习日记"
 categories:
-  - "笔记"
+  - ["笔记"]
 ---
 ## 本周学习记录
 今天学了点东西,主要还是赛后总结和赛时题目

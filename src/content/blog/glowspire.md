@@ -7,7 +7,7 @@ tags:
   - "LLM"
   - "Agent"
 categories:
-  - "复合对话Agent"
+  - ["项目", "复合对话Agent"]
 ---
  构词: Glow(萤火微光)+sprie(低语,螺旋,也有启迪之意)
 

@@ -6,7 +6,7 @@ catalog: true
 tags:
   - "LLM"
 categories:
-  - "复合对话Agent"
+  - ["项目", "复合对话Agent"]
 ---
 # 模型训练
 ## 模型部署
