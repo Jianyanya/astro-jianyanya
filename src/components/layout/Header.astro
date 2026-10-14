@@ -16,6 +16,8 @@ interface Props {
 
 const { isPostPage = false, tocNumbering = true } = Astro.props;
 const { alternate, title, showLogo } = siteConfig;
+// Logo 显示站名（Belluna）；alternate 仅作为社交句柄使用
+const logoText = title || alternate;
 const locale = getLocaleFromUrl(Astro.url.pathname);
 ---
 
@@ -35,7 +37,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
         title={alternate || title}
         aria-label={alternate || title}
       >
-        {showLogo ? <img src={logoSrc} alt="" class="h-8 w-auto" width="448" height="153" /> : <p class="logo-text">{alternate || title}</p>}
+        {showLogo ? <img src={logoSrc} alt="" class="h-8 w-auto" width="448" height="153" /> : <p class="logo-text">{logoText}</p>}
       </a>
       <!-- Mobile: MobilePostHeader (shows heading on post pages, logo otherwise) -->
       <div class="tablet:col-start-2 tablet:flex hidden items-center justify-center">
@@ -51,7 +53,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
           />
         ) : (
           <a href={localizedPath('/', locale)} class="flex items-center gap-1">
-            {showLogo ? <img src={logoSrc} alt={alternate || title} class="h-8 w-auto" width="448" height="153" /> : <span class="logo-text">{alternate || title}</span>}
+            {showLogo ? <img src={logoSrc} alt={logoText} class="h-8 w-auto" width="448" height="153" /> : <span class="logo-text">{logoText}</span>}
           </a>
         )}
       </div>
