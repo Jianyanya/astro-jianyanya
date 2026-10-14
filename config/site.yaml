@@ -875,7 +875,7 @@ christmas:
 #   icon: 导航图标，Iconify 格式（可选，默认：ri:bilibili-fill）
 # -----------------------------------------------------------------------------
 bangumi:
-  userId: cosine
+  userId: 1291333
   # label: 追番
   # icon: ri:bilibili-fill
 
