@@ -3,6 +3,7 @@ title: "2025-08-17 周记"
 link: "diary-2025-08-17-week"
 date: 2025-08-17 12:00:00
 catalog: true
+excludeFromSummary: true
 excludeFromRandom: true
 tags:
   - "学习日记"
