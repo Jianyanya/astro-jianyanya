@@ -11,11 +11,13 @@
 # Site Basic Information
 # =============================================================================
 site:
-  title: 铃月の小屋 # 网站名称
+  title: Belluna # 网站名称
   alternate: jianyanya # 网站英文名称 用于页脚、Logo、@ handle 等
-  subtitle: 欢迎光临～今天的甜点也想和你分享 # 网站副标题
-  name: jianyanya # 作者名称
-  description: Where the bell rings, the moon answers. 铃响之处，月色回应。红金暖调的女仆咖啡厅风格博客 / 猫娘元素 / 记录生活与技术
+  subtitle: |-
+    Where the bell rings, the moon answers.
+    铃响之处，月色回应。
+  name: belluna # 作者显示名
+  description: 铃月助手/算法/强迫症/二次元重度爱好者
   avatar: /img/avatar.webp # 网站头像
   showLogo: false # 是否显示图形 Logo；默认显示站点名称，启用后可替换 src/assets/svg/logo.svg
   author: jianyanya # 作者名称
