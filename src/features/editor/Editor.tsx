@@ -434,7 +434,7 @@ export default function Editor({ ogEndpoint = '/api/editor/og', colophon = [] }:
     >
       <header className="editor-header">
         <a className="editor-brand" href="/" title="返回博客">
-          <span>Koharu</span>
+          <span>Belluna</span>
           <small>写作室</small>
         </a>
         <div className="editor-document-name">
