@@ -16,6 +16,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
+import remarkBreaks from 'remark-breaks';
 import Sonda from 'sonda/vite';
 import { loadEnv } from 'vite';
 import svgr from 'vite-plugin-svgr';
@@ -192,6 +193,9 @@ remarkPlugins.push([
     previewCacheTime: contentConfig.previewCacheTime,
   },
 ]);
+// remark-breaks: render single newlines as <br>, matching Obsidian's line-break
+// behavior — most imported posts come from Obsidian notes.
+remarkPlugins.push(remarkBreaks);
 
 // Rehype plugins — order matters
 const rehypePlugins = [
