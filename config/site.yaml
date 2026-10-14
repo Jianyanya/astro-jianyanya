@@ -308,7 +308,13 @@ friends:
         image: https://your-blog.com/avatar.jpg # 头像链接
         color: "#ffc0cb" # 主题色（可选）
   data: # 友链列表；同组内按这里的顺序展示
-    []
+    - site: 策锁
+      url: https://mjzy.tech
+      owner: Dusty
+      desc: ai时代的探索与agent深度使用者，我会记录我的成长历程和决策路径
+      image: https://wallpaperaccess.com/download/fate-enkidu-8577378
+      color: '#3df072'
+      group: community
     # - site: 示例博客 A
     #   url: https://example-a.com
     #   owner: Alice
