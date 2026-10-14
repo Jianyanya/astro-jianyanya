@@ -1,7 +1,7 @@
 ---
 title: "决策树实验对照方法"
 link: "wifi-decision-tree"
-date: 2026-10-13 22:41:00
+date: 2026-10-14 10:36:00
 catalog: true
 tags:
   - "决策树"
@@ -41,8 +41,6 @@ KNN 或决策树识别座位
 KNN 和决策树目前是**可按模型版本切换的两条识别路径**，还没有做二者联合投票。
 
 **2. 决策树吃进去的是什么数据？**
-
-实现位于 [decision_tree.py](E:/wiferoom/algorithm-service/app/decision_tree.py)。
 
 训练数据每行包含扫描时间、设备、真实座位和各 AP 的 RSSI。先按照设备、批次、座位和时间划分连续采样窗口，默认每 **5 帧**合并一次，逐 AP 取中位数降噪。
 
