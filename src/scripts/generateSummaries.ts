@@ -199,6 +199,12 @@ async function processFile(filePath: string): Promise<PostData | null> {
       return null;
     }
 
+    // Skip posts with a hand-written description — the site displays it with
+    // higher priority than any AI summary, so generating one would be wasted.
+    if (typeof frontmatter.description === 'string' && frontmatter.description.trim()) {
+      return null;
+    }
+
     const slug = extractSlug(filePath, frontmatter.link as string | undefined);
 
     const plainText = await getPlainText(body);
