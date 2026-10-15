@@ -25,4 +25,4 @@ description: "关于我～"
 
 - GitHub：https://github.com/jianyanya
 
-![铃月](/img/log2.png)
+![铃月](/img/head.webp)
