@@ -36,6 +36,7 @@ import { rehypeEncryptedPost } from './src/lib/markdown/rehype-encrypted-post.ts
 import { rehypeImagePlaceholder } from './src/lib/markdown/rehype-image-placeholder.ts';
 import { rehypeShokaAttrs } from './src/lib/markdown/rehype-shoka-attrs.ts';
 import { remarkEncryptedDirective } from './src/lib/markdown/remark-encrypted-directive.ts';
+import { remarkTextDirectiveLiteral } from './src/lib/markdown/remark-text-directive-literal.ts';
 import { remarkLinkEmbed } from './src/lib/markdown/remark-link-embed.ts';
 import { remarkIns, remarkMark } from './src/lib/markdown/remark-shoka-effects.ts';
 import { remarkShokaPreprocess } from './src/lib/markdown/remark-shoka-preprocess.ts';
@@ -180,7 +181,7 @@ if (contentConfig.enableShokaEffects) {
 // here for the main Astro pipeline (when remarkShokaPreprocess skips re-parse),
 // and inside remarkShokaPreprocess's re-parse pipeline (when it does re-parse).
 if (contentConfig.enableEncryptedBlock) {
-  remarkPlugins.push(remarkDirective, remarkEncryptedDirective);
+  remarkPlugins.push(remarkDirective, remarkEncryptedDirective, remarkTextDirectiveLiteral);
 }
 // Link embed is always on (existing feature)
 remarkPlugins.push([
