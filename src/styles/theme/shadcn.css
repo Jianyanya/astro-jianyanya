@@ -32,7 +32,9 @@
 
     --badge-primary: 0 51% 48%;
 
-    --footer: 240 6% 13%; /* #1F1F23 女仆黑页脚 */
+    --footer: 33 70% 96%; /* 浅色页脚：奶油白暖底 */
+    --footer-foreground: 16 12% 38%; /* 暖灰文字 */
+    --footer-paw: 0 51% 58%; /* 女仆红猫爪 */
 
     --radius: 0.75rem;
   }
@@ -69,7 +71,9 @@
 
     --badge-primary: 0 58% 60%;
 
-    --footer: 240 8% 8%; /* 暗色下更深的页脚 */
+    --footer: 240 8% 8%; /* 暗色页脚：深黑 */
+    --footer-foreground: 30 20% 92%;
+    --footer-paw: 0 70% 75%; /* 粉色猫爪 */
 
     --radius: 0.75rem;
   }

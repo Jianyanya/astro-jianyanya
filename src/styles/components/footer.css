@@ -1,27 +1,37 @@
-/* 女仆咖啡厅页脚：颜色走主题变量，随亮/暗模式变化 */
+/* 页脚：颜色走主题变量，浅色为奶油白暖底、暗色为深黑 */
 .footer-maid {
+  position: relative;
   margin-top: auto;
   padding: 2.25rem 0 2rem;
   background: hsl(var(--footer));
-  border-top: 1px solid hsl(var(--border) / 0.6);
-  color: rgb(255 255 255 / 0.85);
+  color: hsl(var(--footer-foreground) / 0.85);
+}
+
+/* 顶部红金渐变分隔线，呼应卡片围裙边 */
+.footer-maid::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--gradient-pink);
+  opacity: 0.8;
 }
 
 .footer-maid :where(.text-muted-foreground) {
-  color: rgb(255 255 255 / 0.65);
+  color: hsl(var(--footer-foreground) / 0.72);
 }
 
 .footer-maid :where(.bg-muted-foreground\/30) {
-  background-color: rgb(255 255 255 / 0.2);
+  background-color: hsl(var(--footer-foreground) / 0.25);
 }
 
 .footer-maid .footer-paw {
-  color: #f6bcbc;
+  color: hsl(var(--footer-paw));
   font-size: 0.95em;
 }
 
 .footer-maid a:hover {
-  color: #f6bcbc;
+  color: hsl(var(--primary));
 }
 
 /* 女仆围裙边：卡片顶部 4px 红金渐变 */
