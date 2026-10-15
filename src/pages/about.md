@@ -15,7 +15,7 @@ description: "关于我～"
 
 —— 这是 Belluna（铃月）这个名字的寓意。
 
-![铃月](/img/log.png)
+![铃月](/img/log2.png)
 
 记录生活与技术,探究 AI 模型训练,热衷做出自己满意的另一半,做做 agent,也时不时打打算法
 
