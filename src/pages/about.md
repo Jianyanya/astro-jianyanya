@@ -20,6 +20,7 @@ description: "关于我～"
 记录生活与技术,探究 AI 模型训练,热衷做出自己满意的另一半,做做 agent,也时不时打打算法
 
 > We can't change what's done, we can only move on.
+> 木已成舟，唯有前行。
 
 ### 找到我
 
