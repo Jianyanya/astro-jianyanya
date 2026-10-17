@@ -20,6 +20,7 @@ import remarkBreaks from 'remark-breaks';
 import Sonda from 'sonda/vite';
 import { loadEnv } from 'vite';
 import svgr from 'vite-plugin-svgr';
+import mdx from '@astrojs/mdx';
 import YAML from 'yaml';
 import { editorIntegration } from './src/features/editor/integration.ts';
 import { momentsRoutes } from './src/features/moments/integration/momentsRoutes.ts';
@@ -247,6 +248,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    mdx(),
     ...(editorConfig.enabled ? [editorIntegration()] : []),
     {
       name: 'content-hydration',

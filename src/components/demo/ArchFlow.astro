@@ -1,0 +1,189 @@
+---
+/**
+ * 教学组件：架构卡片流
+ * 模仿「入口 → 队列 → Agent Loop」的分层架构图：
+ * - 每层一张卡片（kicker 小标 + 标题 + 描述），层间箭头衔接
+ * - 底部一行"路由播报"，由客户端脚本轮播不同优先级的消息
+ * - 样式全部 scoped（Astro 自动加 astro-xxx 哈希，不会污染全局）
+ *
+ * 用法（.mdx 文章中）：
+ *   import ArchFlow from '@components/demo/ArchFlow.astro';
+ *   <ArchFlow />
+ */
+interface Props {
+  /** 可选：覆盖标题 */
+  title?: string;
+}
+const { title = 'Personal Agent 架构一瞥' } = Astro.props;
+
+const layers = [
+  {
+    kicker: '◎ 入口（薄）',
+    title: '用户消息',
+    sub: '来自桌面端 / Web / IM 的原始输入，越薄越稳',
+  },
+  {
+    kicker: '◎ 服务器（厚）',
+    title: '队列 / 路由器',
+    sub: '去重 · 定优先级 · 合并连发 · 决定要不要打扰用户',
+  },
+  {
+    kicker: '◎ 执行（厚）',
+    title: 'Agent Loop',
+    sub: '模型推理 + 工具调用，随时可以被更高优先级打断',
+    accent: true,
+  },
+];
+
+// 路由播报内容：客户端脚本会每 4 秒轮播一条
+const routes = [
+  { tag: '优先级最高', text: '正在跑的 Agent loop 会停下来，先处理你这句话，其他来源的消息排到后面。' },
+  { tag: '合并连发', text: '短时间内刷了 10 条消息？合并成一次推理，省 token 也省脑子。' },
+  { tag: '静默入队', text: '凌晨三点爬到的资料不打扰你，早上汇总成一条摘要。' },
+];
+---
+
+<section class="arch" aria-label={title} data-arch-flow data-routes={JSON.stringify(routes)}>
+  <p class="arch-title">{title}</p>
+  {
+    layers.map((layer, i) => (
+      <>
+        <div class:list={['arch-card', { 'arch-card-accent': layer.accent }]} style={`--i: ${i + 1}`}>
+          <p class="arch-kicker">{layer.kicker}</p>
+          <p class="arch-card-title">{layer.title}</p>
+          <p class="arch-card-sub">{layer.sub}</p>
+        </div>
+        {i < layers.length - 1 && (
+          <div class="arch-down" aria-hidden="true">
+            ↓
+          </div>
+        )}
+      </>
+    ))
+  }
+  <p class="arch-route" aria-live="polite">
+    <span class="arch-tag" data-route-tag>{routes[0].tag}</span>
+    <span data-route-text>{routes[0].text}</span>
+  </p>
+</section>
+
+<style>
+  .arch {
+    --arch-bg: hsl(var(--card));
+    --arch-border: hsl(var(--border));
+    margin: 2rem auto;
+    max-width: 34rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .arch-title {
+    text-align: center;
+    font-weight: 600;
+    color: hsl(var(--foreground) / 0.75);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .arch-card {
+    border: 1px solid var(--arch-border);
+    background: var(--arch-bg);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 0.9rem 1.1rem;
+    box-shadow: var(--box-bg-shadow);
+    animation: arch-rise 0.5s cubic-bezier(0.25, 1, 0.5, 1) both;
+    animation-delay: calc(var(--i, 1) * 0.12s);
+  }
+
+  .arch-card-accent {
+    border-color: hsl(var(--primary) / 0.55);
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.07), hsl(var(--card)));
+  }
+
+  .arch-kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: hsl(var(--primary) / 0.85);
+    margin-bottom: 0.35rem;
+  }
+
+  .arch-card-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: hsl(var(--foreground));
+  }
+
+  .arch-card-sub {
+    margin-top: 0.3rem;
+    font-size: 0.85rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .arch-down {
+    text-align: center;
+    color: hsl(var(--primary) / 0.7);
+    animation: arch-bounce 1.6s ease-in-out infinite;
+  }
+
+  .arch-route {
+    margin-top: 0.9rem;
+    border-inline-start: 3px solid hsl(var(--primary) / 0.7);
+    background: hsl(var(--secondary) / 0.5);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    min-height: 3.2rem;
+  }
+
+  .arch-tag {
+    font-weight: 700;
+    color: hsl(var(--primary));
+    margin-inline-end: 0.5em;
+  }
+
+  @keyframes arch-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes arch-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+  }
+</style>
+
+<script>
+  // 每个实例独立轮播路由播报（页面可能放多个组件实例）
+  const flows = document.querySelectorAll<HTMLElement>('[data-arch-flow]');
+  flows.forEach((flow) => {
+    if (flow.dataset.archReady === 'true') return;
+    flow.dataset.archReady = 'true';
+
+    let routes: { tag: string; text: string }[] = [];
+    try {
+      routes = JSON.parse(flow.dataset.routes ?? '[]');
+    } catch {
+      routes = [];
+    }
+    if (routes.length < 2) return;
+
+    const tagEl = flow.querySelector('[data-route-tag]');
+    const textEl = flow.querySelector('[data-route-text]');
+    let index = 0;
+    setInterval(() => {
+      index = (index + 1) % routes.length;
+      if (tagEl) tagEl.textContent = routes[index].tag;
+      if (textEl) textEl.textContent = routes[index].text;
+    }, 4000);
+  });
+</script>
