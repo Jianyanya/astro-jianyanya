@@ -2,6 +2,7 @@
 title: "博客交互语法速查手册"
 link: "interactive-demo"
 date: 2026-10-16 23:30:00
+draft: true
 catalog: true
 description: "本博客内置的交互内容语法速查：Mermaid 流程图、折叠块、标签卡、提醒块、数学公式、quiz 测验、文字特效等，含可复制的源码示例。"
 quiz: true
