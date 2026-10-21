@@ -72,11 +72,11 @@ export default {
         });
         const data = (await response.json()) as { message?: string; remaining: number; available: boolean; resetsAt: string };
         if (!response.ok) throw new PublicError(response.status, data.message ?? '稍后再来找我喵~');
-        return { ...data, available: data.available && Boolean(c.DEEPSEEK_API_KEY) };
+        return { ...data, available: data.available && Boolean(c.CHAT_API_KEY) };
       };
       if (path.endsWith('/quota') && request.method === 'GET') return json(200, await quota('quota'));
       if (path !== '/api/lingyue/chat' || request.method !== 'POST') return json(405, {});
-      if (!c.DEEPSEEK_API_KEY) throw new PublicError(503, '我还在准备中，过会儿来找我喵~');
+      if (!c.CHAT_API_KEY) throw new PublicError(503, '我还在准备中，过会儿来找我喵~');
       const parsed = schema.safeParse(await readBody(request));
       if (!parsed.success) throw new PublicError(400, '这条消息没接好，重新发一句给我吧喵~');
       const id = parsed.data.requestId;

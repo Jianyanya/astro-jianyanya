@@ -112,10 +112,10 @@ export class Providers {
     onDelta: (text: string) => void,
     onUsage: (usage: Usage) => void,
   ) {
-    if (!this.c.DEEPSEEK_API_KEY) throw new PublicError(503, '铃月还在准备中，站长配置完成后就能聊天啦。');
+    if (!this.c.CHAT_API_KEY) throw new PublicError(503, '铃月还在准备中，站长配置完成后就能聊天啦。');
     const response = await this.request(`${this.c.CHAT_BASE_URL}/chat/completions`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${this.c.DEEPSEEK_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${this.c.CHAT_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: this.c.CHAT_MODEL,
         messages,

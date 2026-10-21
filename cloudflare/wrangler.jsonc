@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "belluna-lingyue",
+  "account_id": "2e9d6dd7c1eb782d599df5d01ab34f21",
   "main": "src/worker.ts",
   "compatibility_date": "2026-10-21",
   "compatibility_flags": ["nodejs_compat"],
@@ -13,6 +14,8 @@
   ],
   "vars": {
     "SITE_ORIGIN": "https://belluna.love",
+    "CHAT_BASE_URL": "https://discovery-api.intern-ai.org.cn/v1",
+    "CHAT_MODEL": "deepseek-v4.1-flash-1017",
     "DAILY_VISITOR_LIMIT": "30",
     "DAILY_IP_LIMIT": "100",
     "DAILY_GLOBAL_LIMIT": "300",

@@ -4,8 +4,13 @@ const positive = (fallback: number) => z.coerce.number().finite().positive().def
 const integer = (fallback: number) => z.coerce.number().int().positive().default(fallback);
 const schema = z.object({
   SITE_ORIGIN: z.string().url().default('https://belluna.love'),
-  CHAT_BASE_URL: z.literal('https://api.deepseek.com/v1').default('https://api.deepseek.com/v1'),
-  CHAT_MODEL: z.literal('deepseek-flash').default('deepseek-flash'),
+  CHAT_BASE_URL: z
+    .string()
+    .transform((s) => s.replace(/\/+$/, ''))
+    .pipe(z.enum(['https://api.deepseek.com/v1', 'https://discovery-api.intern-ai.org.cn/v1']))
+    .default('https://api.deepseek.com/v1'),
+  CHAT_MODEL: z.enum(['deepseek-flash', 'deepseek-v4.1-flash-1017']).default('deepseek-flash'),
+  CHAT_API_KEY: z.string().default(''),
   DEEPSEEK_API_KEY: z.string().default(''),
   SILICONFLOW_API_KEY: z.string().default(''),
   COOKIE_SECRET: z.string().min(32),
@@ -26,4 +31,10 @@ const schema = z.object({
   MAX_OUTPUT_TOKENS: integer(1500),
 });
 export type Config = z.infer<typeof schema>;
-export const loadConfig = (env: unknown): Config => schema.parse(env);
+export const loadConfig = (env: unknown): Config => {
+  const c = schema.parse(env);
+  return {
+    ...c,
+    CHAT_API_KEY: c.CHAT_API_KEY || (c.CHAT_BASE_URL === 'https://api.deepseek.com/v1' ? c.DEEPSEEK_API_KEY : ''),
+  };
+};

@@ -9,6 +9,7 @@
     "build": "wrangler deploy --dry-run --outdir dist",
     "deploy": "wrangler deploy",
     "sync": "node --import tsx scripts/sync.ts",
+    "sync:local": "node --import tsx scripts/local-sync.ts",
     "migrate": "wrangler d1 migrations apply lingyue-knowledge --remote"
   },
   "dependencies": {

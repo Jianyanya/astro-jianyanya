@@ -168,9 +168,8 @@ async function generateSummary(text: string, model: string): Promise<string> {
     ],
     temperature: 0.3,
     maxTokens: 2000,
-    // Thinking models (e.g. DeepSeek V4) default to high effort and can burn the
-    // whole token budget on reasoning, leaving the content empty.
-    reasoning_effort: 'low',
+    // Keep generation in non-thinking mode so the budget is available for the summary.
+    thinking: { type: 'disabled' },
   });
 
   const finalSummary = summary?.trim() || reasoningText?.trim();

@@ -48,7 +48,7 @@ async function generateTags(title: string, text: string): Promise<string[]> {
     ],
     temperature: 0.3,
     maxTokens: 500,
-    reasoning_effort: 'low',
+    thinking: { type: 'disabled' },
   });
 
   const match = raw?.match(/\[[\s\S]*?\]/);
