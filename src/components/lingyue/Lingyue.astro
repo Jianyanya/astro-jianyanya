@@ -1,0 +1,34 @@
+---
+import LingyueCharacter from './LingyueCharacter.astro';
+import LingyueChat from './LingyueChat';
+import LingyuePerch from './LingyuePerch.astro';
+import './character.css';
+import './dock.css';
+import './perch.css';
+import './pose.css';
+
+interface Props {
+  articleId?: string;
+}
+const { articleId } = Astro.props;
+---
+
+<div data-lingyue-context data-article-id={articleId ?? ''}></div>
+<div transition:persist="lingyue" data-lingyue-companion data-pose="peek" data-expression="curious">
+  <div class="lingyue-character-shell">
+    <button id="lingyue-launcher" type="button" aria-label="和铃月聊聊" aria-controls="lingyue-dialog" aria-expanded="false">
+      <LingyueCharacter />
+      <LingyuePerch />
+      <span class="lingyue-question" aria-hidden="true">?</span>
+      <span class="lingyue-character-hint" role="status">要一起看看博客吗喵~</span>
+    </button>
+  </div>
+  <LingyueChat client:panel="lingyue" />
+</div>
+
+<script>
+  import { initCompanion } from './companion';
+  if (document.readyState !== 'loading') initCompanion();
+  else document.addEventListener('DOMContentLoaded', initCompanion, { once: true });
+  document.addEventListener('astro:page-load', initCompanion);
+</script>

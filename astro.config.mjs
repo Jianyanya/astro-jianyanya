@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { unified } from '@astrojs/markdown-remark';
+import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -14,15 +16,15 @@ import robotsTxt from 'astro-robots-txt';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
+import remarkBreaks from 'remark-breaks';
 import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
-import remarkBreaks from 'remark-breaks';
 import Sonda from 'sonda/vite';
 import { loadEnv } from 'vite';
 import svgr from 'vite-plugin-svgr';
-import mdx from '@astrojs/mdx';
 import YAML from 'yaml';
 import { editorIntegration } from './src/features/editor/integration.ts';
+import { lingyueIntegration } from './src/features/lingyue/integration.ts';
 import { momentsRoutes } from './src/features/moments/integration/momentsRoutes.ts';
 import { normalizeContentConfig } from './src/lib/config/content.ts';
 import { normalizeEditorConfig } from './src/lib/config/editor.ts';
@@ -37,12 +39,12 @@ import { rehypeEncryptedPost } from './src/lib/markdown/rehype-encrypted-post.ts
 import { rehypeImagePlaceholder } from './src/lib/markdown/rehype-image-placeholder.ts';
 import { rehypeShokaAttrs } from './src/lib/markdown/rehype-shoka-attrs.ts';
 import { remarkEncryptedDirective } from './src/lib/markdown/remark-encrypted-directive.ts';
-import { remarkTextDirectiveLiteral } from './src/lib/markdown/remark-text-directive-literal.ts';
 import { remarkLinkEmbed } from './src/lib/markdown/remark-link-embed.ts';
 import { remarkIns, remarkMark } from './src/lib/markdown/remark-shoka-effects.ts';
 import { remarkShokaPreprocess } from './src/lib/markdown/remark-shoka-preprocess.ts';
 import { remarkShokaRuby } from './src/lib/markdown/remark-shoka-ruby.ts';
 import { remarkShokaSpoiler } from './src/lib/markdown/remark-shoka-spoiler.ts';
+import { remarkTextDirectiveLiteral } from './src/lib/markdown/remark-text-directive-literal.ts';
 import { collapsibleCodeTransformer } from './src/lib/markdown/shiki-collapsible-transformer.ts';
 import { shokaMetaTransformer } from './src/lib/markdown/shiki-meta-transformer.ts';
 import { SHIKI_THEMES } from './src/lib/markdown/shiki-themes.ts';
@@ -248,12 +250,18 @@ export default defineConfig({
     },
   },
   integrations: [
+    lingyueIntegration(),
     mdx(),
     ...(editorConfig.enabled ? [editorIntegration()] : []),
     {
       name: 'content-hydration',
       hooks: {
-        'astro:config:setup': ({ addClientDirective }) => {
+        'astro:config:setup': ({ addClientDirective, command, config, updateConfig }) => {
+          // Builds also create a Vite server. Keep their optimized dependencies separate
+          // so building while dev is running cannot invalidate live module URLs.
+          updateConfig({
+            vite: { cacheDir: fileURLToPath(new URL(`node_modules/.vite/${command}/`, config.root)) },
+          });
           addClientDirective({ name: 'content', entrypoint: path.resolve('src/lib/markdown/client-content.ts') });
           addClientDirective({ name: 'panel', entrypoint: path.resolve('src/lib/client-panel.ts') });
         },
@@ -330,6 +338,8 @@ export default defineConfig({
         '@floating-ui/react',
         '@hookform/resolvers/zod',
         '@tanstack/react-virtual',
+        'dompurify',
+        'marked',
         'react-hook-form',
         'zod',
       ],

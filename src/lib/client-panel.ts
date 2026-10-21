@@ -2,7 +2,7 @@ import type { ClientDirective } from 'astro';
 
 declare module 'astro' {
   interface AstroClientDirectives {
-    'client:panel'?: 'bgm' | 'announcement';
+    'client:panel'?: 'bgm' | 'announcement' | 'lingyue';
   }
 }
 

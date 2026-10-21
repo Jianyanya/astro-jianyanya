@@ -1,0 +1,82 @@
+:root {
+  --lingyue-dock-width: min(352px, calc(100vw - 24px));
+  --lingyue-dock-left: 12px;
+  --lingyue-dock-top: min(240px, 35dvh);
+  --lingyue-dock-bottom: 16px;
+}
+.lingyue-perch {
+  display: none;
+}
+[data-lingyue-companion] .lingyue-dialog {
+  inset: var(--lingyue-dock-top) auto var(--lingyue-dock-bottom) var(--lingyue-dock-left);
+  width: var(--lingyue-dock-width);
+  height: calc(100dvh - var(--lingyue-dock-top) - var(--lingyue-dock-bottom));
+  max-height: none;
+  border-radius: 20px;
+}
+[data-lingyue-companion] .lingyue-panel {
+  height: 100%;
+  min-height: 0;
+}
+[data-lingyue-companion] .lingyue-header {
+  padding: 18px;
+}
+[data-lingyue-companion] .lingyue-header img {
+  display: block;
+}
+[data-pose="out"] .lingyue-character-shell {
+  left: calc(var(--lingyue-dock-left) + (var(--lingyue-dock-width) - 220px) / 2);
+  top: calc(var(--lingyue-dock-top) - 132px);
+  bottom: auto;
+  width: 220px;
+  height: 146px;
+  z-index: 51;
+}
+[data-pose="out"] .lingyue-character {
+  display: none;
+}
+[data-pose="out"] .lingyue-perch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px #5c263c20);
+  transform-origin: center bottom;
+  animation: lingyue-perch-settle 500ms ease-out both;
+}
+[data-pose="out"] .lingyue-character-hint {
+  display: block;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 6px);
+  max-width: none;
+  text-align: center;
+}
+@keyframes lingyue-perch-settle {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --lingyue-dock-top: 152px;
+    --lingyue-dock-bottom: 8px;
+  }
+  [data-pose="out"] .lingyue-character-shell {
+    width: 150px;
+    height: 100px;
+    left: calc(var(--lingyue-dock-left) + (var(--lingyue-dock-width) - 150px) / 2);
+    top: calc(var(--lingyue-dock-top) - 91px);
+  }
+  [data-pose="out"] .lingyue-character-hint {
+    display: none;
+  }
+  [data-lingyue-companion] .lingyue-header {
+    padding: 10px 16px;
+  }
+}

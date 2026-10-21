@@ -51,7 +51,7 @@ async function generateTags(title: string, text: string): Promise<string[]> {
     reasoning_effort: 'low',
   });
 
-  const match = raw.match(/\[[\s\S]*?\]/);
+  const match = raw?.match(/\[[\s\S]*?\]/);
   if (!match) throw new Error('No tags array in LLM response');
   const tags = JSON.parse(match[0]) as string[];
   return tags

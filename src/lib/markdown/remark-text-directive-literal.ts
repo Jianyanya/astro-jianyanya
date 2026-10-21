@@ -1,5 +1,6 @@
-import type { Plugin } from 'unified';
-import type { Nodes, Parent } from 'unist';
+import type { Root, Text } from 'mdast';
+import type { Transformer } from 'unified';
+import type { Node, Parent } from 'unist';
 import { visit } from 'unist-util-visit';
 
 /**
@@ -9,23 +10,23 @@ import { visit } from 'unist-util-visit';
  * This converts textDirective nodes back to literal text so nothing is lost.
  * Container/leaf directives (`:::name`, used by the encrypted block) are untouched.
  */
-function nodeToText(node: Nodes): string {
-  if (node.type === 'text') return node.value;
+function nodeToText(node: Node): string {
   if ('value' in node && typeof node.value === 'string') return node.value;
   let text = '';
   if ('children' in node && Array.isArray(node.children)) {
-    for (const child of node.children as Nodes[]) text += nodeToText(child);
+    for (const child of node.children as Node[]) text += nodeToText(child);
   }
   return text;
 }
 
-export function remarkTextDirectiveLiteral(): Plugin {
+export function remarkTextDirectiveLiteral(): Transformer<Root> {
   return (tree) => {
     visit(tree, (node, index, parent) => {
       if (node.type !== 'textDirective' || !parent || index === undefined) return;
-      const label = typeof node.label === 'string' && node.label ? `[${node.label}]` : nodeToText(node);
-      const literal = `:${node.name}${label}`;
-      (parent as Parent).children.splice(index, 1, { type: 'text', value: literal });
+      const label = 'label' in node && typeof node.label === 'string' && node.label ? `[${node.label}]` : nodeToText(node);
+      const name = 'name' in node && typeof node.name === 'string' ? node.name : '';
+      const literal: Text = { type: 'text', value: `:${name}${label}` };
+      (parent as Parent).children.splice(index, 1, literal);
       return index + 1;
     });
   };

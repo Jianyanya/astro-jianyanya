@@ -1,0 +1,109 @@
+/* Animate each complete artwork; face registration and dock geometry stay fixed. */
+[data-pose="out"] #lingyue-launcher,
+[data-stage="returning"] #lingyue-launcher {
+  transition: none;
+}
+[data-pose="out"] .lingyue-perch {
+  animation: none;
+}
+[data-pose="peek"][data-expression="happy"] #lingyue-launcher {
+  transform: translateY(145px);
+}
+[data-stage="opening"] .lingyue-character {
+  animation: lingyue-peek-duck 130ms ease-in both;
+}
+[data-stage="settling"] .lingyue-perch {
+  animation: lingyue-perch-arrive 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+[data-stage="settling"] .lingyue-dialog[open] {
+  animation: lingyue-panel-arrive 280ms ease-out both;
+}
+[data-stage="closing"] .lingyue-perch {
+  animation: lingyue-perch-leave 220ms ease-in both;
+}
+[data-stage="closing"] .lingyue-dialog[open] {
+  animation: lingyue-panel-leave 220ms ease-in both;
+}
+[data-stage="closing"] #lingyue-launcher .lingyue-character-hint {
+  opacity: 0;
+  visibility: hidden;
+}
+[data-stage="returning"] .lingyue-character {
+  animation: lingyue-peek-return 420ms ease-out both;
+}
+@keyframes lingyue-peek-duck {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+@keyframes lingyue-perch-arrive {
+  0% {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes lingyue-perch-leave {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+@keyframes lingyue-panel-arrive {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes lingyue-panel-leave {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+@keyframes lingyue-peek-return {
+  0% {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  75% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (max-width: 700px) {
+  [data-pose="peek"][data-expression="happy"] #lingyue-launcher {
+    transform: translateY(101px);
+  }
+}

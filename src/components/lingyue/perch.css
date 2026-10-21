@@ -1,0 +1,169 @@
+.perch-eyes,
+.perch-mouth {
+  display: none;
+}
+.lingyue-perch {
+  overflow: visible;
+  --perch-tail-time: 8s;
+  --perch-tail-angle: 4deg;
+  --perch-ear-time: 9.6s;
+  --perch-ear-angle: 4deg;
+  --perch-hair-time: 7s;
+  --perch-hair-angle: 1.5deg;
+}
+.perch-motion {
+  transform-box: view-box;
+}
+.perch-tail {
+  transform-origin: 1288px 756px;
+  animation: perch-tail-sway var(--perch-tail-time) ease-in-out infinite;
+}
+.perch-ear-left {
+  transform-origin: 673px 156px;
+  animation: perch-ear-twitch var(--perch-ear-time) ease-in-out infinite;
+}
+.perch-ear-right {
+  transform-origin: 1124px 324px;
+  animation: perch-ear-twitch var(--perch-ear-time) 1.2s ease-in-out infinite reverse;
+}
+.perch-hair-left {
+  transform-origin: 209px 864px;
+  animation: perch-hair-sway var(--perch-hair-time) ease-in-out infinite;
+}
+.perch-hair-right {
+  transform-origin: 1317px 861px;
+  animation: perch-hair-sway var(--perch-hair-time) -2s ease-in-out infinite reverse;
+}
+[data-expression="happy"] .lingyue-perch {
+  --perch-tail-time: 3s;
+  --perch-tail-angle: 6deg;
+  --perch-ear-time: 2.4s;
+  --perch-ear-angle: 7deg;
+  --perch-hair-time: 4s;
+  --perch-hair-angle: 2deg;
+}
+[data-expression="thinking"] .lingyue-perch {
+  --perch-tail-time: 12s;
+  --perch-tail-angle: 2deg;
+  --perch-ear-time: 14s;
+  --perch-hair-time: 10s;
+  --perch-hair-angle: 0.8deg;
+}
+[data-expression="smug"] .perch-tail {
+  animation: perch-tail-proud 1.4s ease-in-out 2;
+}
+[data-expression="doubtful"] .perch-ear-left {
+  animation: perch-ear-puzzle 1.8s ease-in-out 1;
+}
+@keyframes perch-tail-sway {
+  0%,
+  16%,
+  84%,
+  100% {
+    transform: rotate(0deg);
+  }
+  38% {
+    transform: rotate(var(--perch-tail-angle));
+  }
+  65% {
+    transform: rotate(calc(var(--perch-tail-angle) * -0.65));
+  }
+}
+@keyframes perch-ear-twitch {
+  0%,
+  58%,
+  82%,
+  100% {
+    transform: rotate(0deg);
+  }
+  65% {
+    transform: rotate(calc(var(--perch-ear-angle) * -1));
+  }
+  73% {
+    transform: rotate(calc(var(--perch-ear-angle) * 0.45));
+  }
+}
+@keyframes perch-hair-sway {
+  0%,
+  20%,
+  100% {
+    transform: rotate(0deg);
+  }
+  55% {
+    transform: rotate(var(--perch-hair-angle));
+  }
+  80% {
+    transform: rotate(calc(var(--perch-hair-angle) * -0.5));
+  }
+}
+@keyframes perch-tail-proud {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  28% {
+    transform: rotate(6deg);
+  }
+  62% {
+    transform: rotate(-4deg);
+  }
+}
+@keyframes perch-ear-puzzle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35%,
+  65% {
+    transform: rotate(-6deg);
+  }
+}
+[data-expression="curious"] .perch-mouth-happy,
+[data-expression="happy"] .perch-mouth-happy,
+[data-expression="happy"] .perch-eyes-happy,
+[data-expression="thinking"] .perch-mouth-thinking,
+[data-expression="thinking"] .perch-eyes-thinking,
+[data-expression="doubtful"] .perch-mouth-doubtful,
+[data-expression="doubtful"] .perch-eyes-doubtful,
+[data-expression="smug"] .perch-mouth-smug,
+[data-expression="smug"] .perch-eyes-smug {
+  display: inline;
+}
+[data-expression="curious"] .perch-eyes-happy {
+  display: inline;
+  opacity: 0;
+  animation: perch-blink 6.4s steps(1, end) infinite;
+}
+[data-expression="talking"] .perch-mouth-happy {
+  display: inline;
+  opacity: 0;
+  animation: perch-speak 720ms steps(1, end) infinite;
+}
+[data-sleeping="true"] .lingyue-perch * {
+  animation-play-state: paused;
+}
+@keyframes perch-blink {
+  0%,
+  94%,
+  98%,
+  100% {
+    opacity: 0;
+  }
+  95%,
+  97% {
+    opacity: 1;
+  }
+}
+@keyframes perch-speak {
+  0%,
+  42%,
+  72%,
+  100% {
+    opacity: 0;
+  }
+  27%,
+  60%,
+  88% {
+    opacity: 1;
+  }
+}

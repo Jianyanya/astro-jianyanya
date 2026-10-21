@@ -1,0 +1,46 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Part from './CharacterPart.astro';
+
+const sources = import.meta.glob<{ default: ImageMetadata }>('/src/assets/lingyue/source-rig-v4/*.webp', { eager: true });
+const images = await Promise.all(
+  Object.entries(sources).map(async ([path, image]) => {
+    const id = path.split('/').pop()!.replace('.webp', '');
+    const optimized = await getImage({ src: image.default, width: 720, format: 'webp', quality: 95 });
+    return [id, optimized.src] as const;
+  }),
+);
+const src = Object.fromEntries(images);
+---
+
+<!-- Each layer uses the mother image's canvas. Facial features never use
+     independently scaled destination boxes. -->
+<svg class="lingyue-character" viewBox="0 0 1037 1516" fill="none" aria-hidden="true" focusable="false" data-art-version="source-v4">
+  <g class="lingyue-rig">
+    <g class="lingyue-breath">
+    <g class="lingyue-body-sway">
+      <Part src={src['motion-underpaint']} />
+      <Part src={src.underpaint} />
+      <Part src={src.tail} class="lingyue-tail" />
+      <Part src={src['ear-left']} class="lingyue-ear-left" />
+      <Part src={src['ear-right']} class="lingyue-ear-right" />
+      <Part src={src['hair-tip-left']} class="lingyue-hair-tip-left" />
+      <Part src={src['hair-tip-right']} class="lingyue-hair-tip-right" />
+      <Part src={src.base} />
+      <Part src={src['arm-left']} class="lingyue-arm-left" />
+      <Part src={src['arm-right']} class="lingyue-arm-right" />
+      <g class="lingyue-eyes-open">
+        <Part src={src['eye-left-open']} />
+        <Part src={src['eye-right-open']} />
+      </g>
+      <g class="lingyue-eyes-closed">
+        <Part src={src['eye-left-closed']} />
+        <Part src={src['eye-right-closed']} />
+      </g>
+      <Part src={src['mouth-open']} class="lingyue-mouth-curious" />
+      <Part src={src['mouth-rest']} class="lingyue-mouth-rest" />
+    </g>
+    </g>
+  </g>
+</svg>

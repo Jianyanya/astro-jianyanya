@@ -1,0 +1,48 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+const sources = import.meta.glob<{ default: ImageMetadata }>('/src/assets/lingyue/{perch-v1,perch-motion-v1}/*.webp', {
+  eager: true,
+});
+const images = await Promise.all(
+  Object.entries(sources).map(async ([path, image]) => {
+    const id = path.split('/').pop()!.replace('.webp', '');
+    const optimized = await getImage({ src: image.default, width: 720, format: 'webp', quality: 95 });
+    return [id, optimized.src] as const;
+  }),
+);
+const src = Object.fromEntries(images);
+---
+
+<!-- Every replacement patch occupies the SAME master canvas. Do not position
+     eyes or mouths independently; their local registration is baked into the art. -->
+<svg class="lingyue-perch" viewBox="0 0 1536 1024" fill="none" aria-hidden="true" focusable="false" data-art-version="perch-v1">
+  <defs>
+    <clipPath id="perch-clip-tail"><rect x="1250" y="0" width="400" height="755" /></clipPath>
+    <clipPath id="perch-clip-ear-left"><rect x="0" y="0" width="1536" height="140" /></clipPath>
+    <clipPath id="perch-clip-ear-right"><rect x="1170" y="0" width="366" height="1024" /></clipPath>
+    <clipPath id="perch-clip-hair-left"><rect x="0" y="900" width="1536" height="124" /></clipPath>
+    <clipPath id="perch-clip-hair-right"><rect x="0" y="900" width="1536" height="124" /></clipPath>
+  </defs>
+  <image href={src.fill} x="0" y="0" width="1536" height="1024" />
+  {['tail', 'ear-left', 'ear-right', 'hair-left', 'hair-right'].map((part) => (
+    <g clip-path={`url(#perch-clip-${part})`}>
+      <g class={`perch-motion perch-${part}`}>
+        <image href={src[part]} x="0" y="0" width="1536" height="1024" />
+      </g>
+    </g>
+  ))}
+  <image href={src.body} x="0" y="0" width="1536" height="1024" />
+  <image href={src.anchors} x="0" y="0" width="1536" height="1024" />
+  {['happy', 'thinking', 'doubtful', 'smug'].map((state) => (
+    <g class={`perch-eyes perch-eyes-${state}`}>
+      <image href={src[`${state}-eyes`]} x="0" y="0" width="1536" height="1024" />
+    </g>
+  ))}
+  {['happy', 'thinking', 'doubtful', 'smug'].map((state) => (
+    <g class={`perch-mouth perch-mouth-${state}`}>
+      <image href={src[`${state}-mouth`]} x="0" y="0" width="1536" height="1024" />
+    </g>
+  ))}
+</svg>

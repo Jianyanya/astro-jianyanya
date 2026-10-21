@@ -37,3 +37,8 @@ pnpm-debug.log*
 
 # Backup files
 backups/
+
+# Cloudflare runtime/local secrets
+.wrangler/
+.dev.vars
+.dev.vars.*

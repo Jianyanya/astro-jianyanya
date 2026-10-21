@@ -1,0 +1,52 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "belluna-lingyue",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-10-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "belluna.love/api/lingyue/*",
+      "zone_name": "belluna.love"
+    }
+  ],
+  "vars": {
+    "SITE_ORIGIN": "https://belluna.love",
+    "DAILY_VISITOR_LIMIT": "30",
+    "DAILY_IP_LIMIT": "100",
+    "DAILY_GLOBAL_LIMIT": "300",
+    "MONTHLY_BUDGET_CNY": "200"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lingyue-knowledge",
+      "database_id": "5ce613ae-dfe7-46a0-b195-8cb96a614b7e",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vectorize": [
+    {
+      "binding": "VECTORS",
+      "index_name": "lingyue-knowledge"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "QUOTAS",
+        "class_name": "QuotaObject"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["QuotaObject"]
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
+}

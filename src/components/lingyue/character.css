@@ -1,0 +1,387 @@
+.lingyue-character-shell {
+  position: fixed;
+  left: 16px;
+  bottom: 0;
+  width: 210px;
+  height: 307px;
+  z-index: 46;
+  pointer-events: none;
+}
+#lingyue-launcher {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(163px);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+[data-pose="out"] #lingyue-launcher {
+  transform: translateY(0);
+}
+#lingyue-launcher:focus-visible {
+  outline: 2px solid #c65b87;
+  outline-offset: -8px;
+  border-radius: 24px;
+}
+.lingyue-character {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 5px #5c263c20);
+}
+.lingyue-body-sway {
+  transform-origin: 520px 1430px;
+  transition: transform 400ms ease;
+}
+.lingyue-breath {
+  transform-origin: 520px 1450px;
+  animation: lingyue-breathe 4.2s ease-in-out infinite;
+}
+.lingyue-tail {
+  transform-origin: 968px 838px;
+  animation: lingyue-tail-sway 6.4s ease-in-out infinite;
+}
+.lingyue-ear-left {
+  transform-origin: 392px 154px;
+  animation: lingyue-ear-left-twitch 7.6s ease-in-out -3s infinite;
+}
+.lingyue-ear-right {
+  transform-origin: 778px 241px;
+  animation: lingyue-ear-right-twitch 9.2s ease-in-out -1.5s infinite;
+}
+.lingyue-hair-tip-left {
+  transform-origin: 108px 970px;
+  animation: lingyue-hair-sway 5.8s ease-in-out infinite;
+}
+.lingyue-hair-tip-right {
+  transform-origin: 934px 1032px;
+  animation: lingyue-hair-sway 6.4s ease-in-out -2s infinite reverse;
+}
+[data-sleeping="true"] .lingyue-character *,
+[data-sleeping="true"] .lingyue-question {
+  animation-play-state: paused;
+}
+.lingyue-eyes-open {
+  animation: lingyue-blink-open 6s infinite;
+}
+.lingyue-eyes-closed {
+  opacity: 0;
+  animation: lingyue-blink-closed 6s infinite;
+}
+.lingyue-mouth-rest {
+  opacity: 0;
+}
+.lingyue-arm-right {
+  transform-origin: 685px 657px;
+  transition: transform 350ms ease;
+}
+/* V4 uses its own registered source geometry; the approved V3 snapshot is retained. */
+[data-art-version="source-v4"] .lingyue-tail {
+  transform-origin: 675px 764px;
+}
+[data-art-version="source-v4"] .lingyue-ear-left {
+  transform-origin: 395px 153px;
+}
+[data-art-version="source-v4"] .lingyue-ear-right {
+  transform-origin: 752px 222px;
+}
+[data-art-version="source-v4"] .lingyue-hair-tip-left {
+  transform-origin: 118px 943px;
+}
+[data-art-version="source-v4"] .lingyue-hair-tip-right {
+  transform-origin: 937px 995px;
+}
+[data-art-version="source-v4"] .lingyue-arm-right {
+  transform-origin: 657px 602px;
+}
+[data-expression="happy"] .lingyue-body-sway {
+  transform: rotate(-1.4deg);
+}
+[data-expression="happy"] .lingyue-arm-right {
+  transform: rotate(-2deg);
+}
+[data-expression="happy"] .lingyue-eyes-open {
+  animation: none;
+  opacity: 0;
+}
+[data-expression="happy"] .lingyue-eyes-closed {
+  animation: none;
+  opacity: 1;
+}
+[data-expression="happy"] .lingyue-mouth-curious {
+  opacity: 0;
+}
+[data-expression="happy"] .lingyue-mouth-rest {
+  opacity: 1;
+}
+[data-expression="thinking"] .lingyue-body-sway {
+  transform: rotate(1deg);
+}
+[data-expression="thinking"] .lingyue-mouth-curious {
+  opacity: 0;
+}
+[data-expression="thinking"] .lingyue-mouth-rest {
+  opacity: 1;
+}
+[data-expression="talking"] .lingyue-mouth-curious {
+  animation: lingyue-talk-open 650ms steps(1) infinite;
+}
+[data-expression="talking"] .lingyue-mouth-rest {
+  animation: lingyue-talk-rest 650ms steps(1) infinite;
+}
+[data-pose="out"] .lingyue-rig {
+  transform-origin: 520px 1430px;
+  animation: lingyue-hop 700ms ease-out both;
+}
+.lingyue-question {
+  position: absolute;
+  right: 5px;
+  top: 15px;
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 36px;
+  border-radius: 48% 52% 48% 25%;
+  background: #fff6e9;
+  border: 1px solid #e4b5a2;
+  color: #b95f58;
+  font:
+    700 24px / 1 Georgia,
+    serif;
+  box-shadow: 0 3px 10px #6d32421a;
+  transform: rotate(12deg);
+  animation: lingyue-question-float 4s ease-in-out infinite;
+  transition: opacity 180ms;
+}
+[data-expression="happy"] .lingyue-question,
+[data-pose="out"] .lingyue-question {
+  opacity: 0;
+}
+.lingyue-character-hint {
+  position: absolute;
+  left: 70%;
+  top: 48px;
+  width: max-content;
+  max-width: 190px;
+  padding: 8px 12px;
+  border: 1px solid #dcaec3;
+  border-radius: 14px 14px 14px 3px;
+  color: #76435b;
+  background: #fff9fc;
+  box-shadow: 0 4px 16px #67394c18;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition:
+    opacity 180ms,
+    transform 180ms,
+    visibility 180ms;
+  pointer-events: none;
+}
+[data-pose="out"] .lingyue-character-hint {
+  /* Keep the bubble in the character's column, clear of the dialog to its right. */
+  left: 8px;
+  right: 8px;
+  top: auto;
+  bottom: calc(100% + 10px);
+  width: auto;
+  max-width: none;
+  border-radius: 14px 14px 14px 3px;
+}
+#lingyue-launcher:hover .lingyue-character-hint,
+#lingyue-launcher:focus-visible .lingyue-character-hint,
+[data-load-failed="true"] .lingyue-character-hint {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.dark .lingyue-character-hint {
+  color: #f3c6dd;
+  background: #332535;
+  border-color: #83566d;
+}
+@keyframes lingyue-blink-open {
+  0%,
+  90%,
+  94%,
+  100% {
+    opacity: 1;
+  }
+  91%,
+  93% {
+    opacity: 0;
+  }
+}
+@keyframes lingyue-breathe {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(-9px) scale(1.003, 1.005);
+  }
+}
+@keyframes lingyue-tail-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+@keyframes lingyue-ear-left-twitch {
+  0%,
+  78%,
+  88%,
+  100% {
+    transform: none;
+  }
+  82% {
+    transform: rotate(-3.2deg);
+  }
+  85% {
+    transform: rotate(1.5deg);
+  }
+}
+@keyframes lingyue-ear-right-twitch {
+  0%,
+  80%,
+  91%,
+  100% {
+    transform: none;
+  }
+  84% {
+    transform: rotate(2.6deg);
+  }
+  87% {
+    transform: rotate(-1.2deg);
+  }
+}
+@keyframes lingyue-hair-sway {
+  0%,
+  100% {
+    transform: rotate(-0.9deg);
+  }
+  50% {
+    transform: rotate(0.9deg);
+  }
+}
+@keyframes lingyue-blink-closed {
+  0%,
+  90%,
+  94%,
+  100% {
+    opacity: 0;
+  }
+  91%,
+  93% {
+    opacity: 1;
+  }
+}
+@keyframes lingyue-talk-open {
+  0% {
+    opacity: 0;
+  }
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes lingyue-talk-rest {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes lingyue-question-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(5deg);
+  }
+}
+@keyframes lingyue-hop {
+  0% {
+    transform: translateY(12px) scale(0.97, 1.02);
+  }
+  40% {
+    transform: translateY(-12px);
+  }
+  70% {
+    transform: translateY(0) scale(1.02, 0.98);
+  }
+  100% {
+    transform: none;
+  }
+}
+@media (max-width: 700px) {
+  .lingyue-character-shell {
+    left: 6px;
+    width: 150px;
+    height: 219px;
+  }
+  #lingyue-launcher {
+    transform: translateY(117px);
+  }
+  .lingyue-question {
+    top: 5px;
+    right: -2px;
+    width: 25px;
+    height: 30px;
+    font-size: 20px;
+  }
+  .lingyue-character-hint {
+    top: 30px;
+    max-width: 165px;
+    font-size: 11px;
+  }
+  [data-pose="out"] .lingyue-character-shell {
+    width: 110px;
+    height: 161px;
+    bottom: calc(min(74dvh, 680px) - 38px);
+    left: 8px;
+    z-index: 51;
+  }
+  [data-pose="out"] .lingyue-character-hint {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-expression="talking"] .lingyue-mouth-curious {
+    opacity: 1;
+  }
+  [data-expression="talking"] .lingyue-mouth-rest {
+    opacity: 0;
+  }
+  [data-lingyue-companion] *,
+  [data-lingyue-companion] *::before,
+  [data-lingyue-companion] *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: Override every expression animation for the user's motion preference. */
+    animation: none !important;
+    /* biome-ignore lint/complexity/noImportantStyles: Includes hover and pose transitions with greater specificity. */
+    transition-duration: 0.01ms !important;
+  }
+}
+html.motion-off [data-expression="talking"] .lingyue-mouth-curious {
+  opacity: 1;
+}
+html.motion-off [data-expression="talking"] .lingyue-mouth-rest {
+  opacity: 0;
+}
+html.motion-off [data-lingyue-companion] * {
+  /* biome-ignore lint/complexity/noImportantStyles: The blog's motion-off mode must use a stable face rather than a 0.01ms animation's final frame. */
+  animation: none !important;
+}
