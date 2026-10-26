@@ -4,7 +4,7 @@
  */
 
 import sanitizeHtml from 'sanitize-html';
-import type { OGData } from './og-fetcher';
+import type { OGData } from './og-fetcher.js';
 
 /** Strip every HTML tag from user-generated text. */
 function sanitizeText(text: string): string {

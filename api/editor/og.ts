@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handleEditorOGRequest } from '../../src/features/editor/server/http';
+import { handleEditorOGRequest } from '../../src/features/editor/server/http.js';
 
 /** Vercel's Node function reuses the same bounded service as local and Docker deployments. */
 export default async function handler(request: IncomingMessage, response: ServerResponse): Promise<void> {

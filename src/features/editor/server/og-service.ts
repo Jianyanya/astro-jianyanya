@@ -8,7 +8,7 @@ import metascraperLogoFavicon from 'metascraper-logo-favicon';
 import metascraperTitle from 'metascraper-title';
 import metascraperUrl from 'metascraper-url';
 import { Agent, fetch } from 'undici';
-import type { OGData } from '../../../lib/markdown/og-fetcher';
+import type { OGData } from '../../../lib/markdown/og-fetcher.js';
 import {
   OGRequestError,
   parsePublicUrl,
@@ -16,7 +16,7 @@ import {
   resolveAddresses,
   validatePublicUrl,
   withAbort,
-} from './public-url';
+} from './public-url.js';
 
 interface FetchResponse {
   status: number;

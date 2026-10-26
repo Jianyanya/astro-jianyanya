@@ -3,7 +3,6 @@
   "framework": "astro",
   "buildCommand": "pnpm build",
   "functions": {
-    "**/*": { "supportsCancellation": true },
     "api/editor/og.ts": { "maxDuration": 15 }
   },
   "rewrites": [{ "source": "/api/lingyue/:action(chat|quota)", "destination": "/_render" }],

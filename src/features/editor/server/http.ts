@@ -1,8 +1,8 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { renderLinkPreview } from '../../../lib/markdown/link-card-template';
-import type { OGData } from '../../../lib/markdown/og-fetcher';
-import { fetchEditorOG } from './og-service';
-import { MAX_URL_LENGTH, parsePublicUrl } from './public-url';
+import { renderLinkPreview } from '../../../lib/markdown/link-card-template.js';
+import type { OGData } from '../../../lib/markdown/og-fetcher.js';
+import { fetchEditorOG } from './og-service.js';
+import { MAX_URL_LENGTH, parsePublicUrl } from './public-url.js';
 
 export interface EditorOGHandlerOptions {
   fetchOG?: (url: string) => Promise<OGData>;
