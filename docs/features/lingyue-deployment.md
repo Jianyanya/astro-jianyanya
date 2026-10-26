@@ -1,7 +1,9 @@
 # 铃月部署与文章发布
 
-目标架构：Astro 静态文章 + Vercel Node.js 聊天函数 + Neon PostgreSQL/pgvector。
-旧 Cloudflare 服务保留到新环境验收、域名切换完成后。不要提前删除旧资源。
+当前架构：Astro 静态文章 + Vercel Node.js 聊天函数 + Neon PostgreSQL/pgvector。
+2026-10-27 已完成 `belluna.love` 正式域名切换，GitHub main 推送由 Vercel 自动部署。
+Cloudflare 继续管理 DNS；旧 Pages 自动构建已暂停，旧助手 Worker 路由已停用。
+旧 Pages 部署、Worker、D1 和 Vectorize 保留用于回退。
 
 ## 模块位置
 
@@ -125,3 +127,8 @@ Windows 无符号链接权限时，本地构建使用 Node 适配器；正式 Ve
 切换当天访客次数会重新计数。后续部署一直复用 Neon 账本，不会随函数重启或部署重置。
 旧资源保留期间不要执行旧 Cloudflare 同步脚本覆盖其回退数据。
 网站回滚时知识版本也要匹配；知识启用命令仍会验证实际站点指纹，不能仅回滚前端便认为完成。
+
+如需整体回退到迁移前的 Cloudflare 版本：先确认旧 Pages 保留部署和旧知识库可用，
+将根域名重新指向旧 Pages，并恢复 `belluna.love/api/lingyue/*` 到 `belluna-lingyue` Worker
+的路由及其所需代理配置。不要直接恢复旧 Pages 对新 main 的自动构建；先选择对应的旧代码。
+Neon 数据保持不动，待回退站点的文章和回答确认正常后再处理后续发布。

@@ -173,7 +173,9 @@ pages/ → components/ → hooks/ → lib/ → constants/
 ### Approved Vercel / Neon migration (2026-10-26)
 
 The user approved migrating this blog and Belluna API to one Vercel project, with Neon PostgreSQL + pgvector.
-Cloudflare remains the live fallback until the Vercel deployment is verified and the domain is switched.
+Vercel is the production host for belluna.love as of 2026-10-27; Neon serves knowledge and quotas.
+Cloudflare manages DNS. Its old Pages automatic builds are paused and its old assistant Worker route is removed;
+the old Pages deployment, Worker, D1 and Vectorize remain available for deliberate rollback.
 The Cloudflare and older Node/Qdrant sections below describe the previous targets; their platform-specific
 instructions do not govern the new backend.
 
@@ -198,9 +200,9 @@ instructions do not govern the new backend.
 - Windows builds use the Node adapter to avoid Vercel/pnpm symlink privilege failures; Vercel/Linux uses
   `@astrojs/vercel`. Both use the same application routes. Do not patch installed dependencies or OS permissions.
 
-### Previous Cloudflare target (2026-10-21; live until cutover)
+### Previous Cloudflare target (2026-10-21; retained fallback)
 
-The user approved the Free Cloudflare backend and automatic knowledge updates. `cloudflare/` is a standalone pnpm workspace inside this Git repository: Worker fetch/SSE, D1 FTS5/content, Vectorize BGE-M3 dense vectors, and a SQLite-backed Durable Object for atomic quota/budget reservations. `cloudflare/README.md` is the current production setup guide. The parent Node/Qdrant implementation remains a local/legacy alternative; older same-server deployment notes below are historical, not the production target.
+The previous Free Cloudflare backend used automatic knowledge updates. `cloudflare/` is a standalone pnpm workspace inside this Git repository: Worker fetch/SSE, D1 FTS5/content, Vectorize BGE-M3 dense vectors, and a SQLite-backed Durable Object for atomic quota/budget reservations. `cloudflare/README.md` documents that previous target. The parent Node/Qdrant implementation remains a local/legacy alternative; older same-server deployment notes below are historical, not the production target.
 
 - Keep the static blog deployment unchanged. Worker route: `belluna.love/api/lingyue/*`; no login or visitor API keys. Never upgrade a Cloudflare plan automatically.
 - Model/persona/prompt code for this target lives in `cloudflare/src/`; do not update only the parent server when changing production behavior. Preserve current UI and persona unless explicitly requested.
