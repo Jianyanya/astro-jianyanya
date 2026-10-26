@@ -7,6 +7,7 @@ import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import vercel from '@astrojs/vercel';
 import yaml from '@rollup/plugin-yaml';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, memoryCache } from 'astro/config';
@@ -65,6 +66,9 @@ const editorConfig = normalizeEditorConfig(yamlConfig.editor);
 const env = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
 const { ANALYZE } = env;
 const isAnalyze = ANALYZE === 'true';
+// Windows without symlink privileges cannot assemble Vercel's pnpm function bundle.
+// Local generation uses the same server routes with Node; Vercel builds on Linux with its own adapter.
+const useVercelAdapter = env.VERCEL === '1' || process.platform !== 'win32';
 // Get robots.txt config from YAML
 const robotsConfig = yamlConfig.seo?.robots;
 
@@ -233,6 +237,7 @@ if (contentConfig.enhanceCodeBlock) shikiTransformers.push(collapsibleCodeTransf
 export default defineConfig({
   site: yamlConfig.site.url,
   output: 'static',
+  adapter: useVercelAdapter ? vercel({ maxDuration: 120 }) : node({ mode: 'standalone' }),
   compressHTML: true,
   markdown: {
     processor: unified({
@@ -282,7 +287,6 @@ export default defineConfig({
   ],
   ...(momentsConfig.enabled
     ? {
-        adapter: node({ mode: 'standalone' }),
         cache: { provider: memoryCache({ max: 1000 }) },
       }
     : {}),

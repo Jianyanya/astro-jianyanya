@@ -24,6 +24,9 @@ pnpm koharu generate lqips   # 图片变更后重新生成 LQIP 占位
 
 > 修改 `config/site.yaml` 后需要重启开发服务器或重新构建。
 
+铃月助手采用 Vercel + Neon PostgreSQL/pgvector 部署，配置及文章发布步骤见
+[铃月部署与文章发布](docs/features/lingyue-deployment.md)。
+
 ## 结构速查
 
 - `config/site.yaml` — 站点信息、导航、社交链接、评论等全部配置

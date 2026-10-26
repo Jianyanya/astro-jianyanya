@@ -1,6 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "pnpm build",
   "functions": {
+    "**/*": { "supportsCancellation": true },
     "api/editor/og.ts": { "maxDuration": 15 }
-  }
+  },
+  "rewrites": [{ "source": "/api/lingyue/:action(chat|quota)", "destination": "/_render" }],
+  "headers": [
+    { "source": "/api/lingyue/:path*", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/lingyue-version.json", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
+  ]
 }

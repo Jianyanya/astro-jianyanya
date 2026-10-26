@@ -170,7 +170,35 @@ pages/ → components/ → hooks/ → lib/ → constants/
 
 **Writing Room**: Public Markdown editor at `/editor` (`src/features/editor/`, enabled by `editor.enabled`; docs in `docs/features/editor.md`). Drafts live in localStorage; `/editor?from=<same-origin .md path>` imports a post as a copy draft (deduped by source). The CMS reuses the same editor for save-to-disk. Article properties edit the YAML in place (including the colophon section, whose dictionary is serialized into the page at build time).
 
-### Cloudflare deployment target (2026-10-21)
+### Approved Vercel / Neon migration (2026-10-26)
+
+The user approved migrating this blog and Belluna API to one Vercel project, with Neon PostgreSQL + pgvector.
+Cloudflare remains the live fallback until the Vercel deployment is verified and the domain is switched.
+The Cloudflare and older Node/Qdrant sections below describe the previous targets; their platform-specific
+instructions do not govern the new backend.
+
+- `src/server/lingyue/`: current server-side persona/providers, request/SSE handler, PostgreSQL knowledge store,
+  hybrid retrieval, and transactional quota ledger. Do not change character art, UI or persona during migration.
+- `src/pages/api/lingyue/[action].ts`: dynamic `chat` / `quota` endpoints; articles stay prerendered.
+- `migrations/lingyue/`: PostgreSQL schema. Chat credentials may SELECT knowledge and mutate only quota tables;
+  `KNOWLEDGE_DATABASE_URL` is the local publishing/admin credential and must never be added to Vercel runtime env.
+- `scripts/lingyue/`: local generation, staging, verified activation, cleanup, and release orchestration.
+  `pnpm generate:knowledge` only creates local artifacts (and calls the embedding provider for missing vectors).
+  `knowledge:stage` writes an inactive version; `knowledge:activate` requires a matching public site fingerprint.
+  `publish:blog` builds/generates, requires reviewed committed changes on main, stages, pushes GitHub,
+  waits for the deployed fingerprint, then uses compare-and-swap activation. No forced Git push or CI token.
+- `src/features/lingyue/`: exports private `.cache/lingyue/snapshot.json` and a public hash-only
+  `/lingyue-version.json`. Remove the intermediate body snapshot before adapter bundling / public delivery.
+- Never publish `.cache/lingyue`, `.env.local`, database credentials, owner/publisher URLs or CLI auth.
+  Existing model keys are owner-funded server configuration. No visitor login or BYOK.
+- `docs/features/lingyue-deployment.md` is the new deployment and article publishing guide.
+- Required checks: blog lint/check/build, `pnpm test:lingyue`; Cloudflare checks remain regression checks for fallback.
+  PGlite tests execute PostgreSQL + pgvector locally, but cannot establish live Neon multi-connection concurrency,
+  Vercel cancellation behavior, regional latency, deployment promotion or DNS/TLS success.
+- Windows builds use the Node adapter to avoid Vercel/pnpm symlink privilege failures; Vercel/Linux uses
+  `@astrojs/vercel`. Both use the same application routes. Do not patch installed dependencies or OS permissions.
+
+### Previous Cloudflare target (2026-10-21; live until cutover)
 
 The user approved the Free Cloudflare backend and automatic knowledge updates. `cloudflare/` is a standalone pnpm workspace inside this Git repository: Worker fetch/SSE, D1 FTS5/content, Vectorize BGE-M3 dense vectors, and a SQLite-backed Durable Object for atomic quota/budget reservations. `cloudflare/README.md` is the current production setup guide. The parent Node/Qdrant implementation remains a local/legacy alternative; older same-server deployment notes below are historical, not the production target.
 
