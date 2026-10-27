@@ -22,6 +22,7 @@ import { ClientRouter } from 'astro:transitions';
 import UmamiAnalytics from '@components/analytics/UmamiAnalytics.astro';
 import { pageTransition } from '@constants/anim/page-transition';
 import { seoConfig } from '@constants/site-config';
+import Analytics from '@vercel/analytics/astro';
 import LoadingIndicator from 'astro-loading-indicator/component';
 import { Tooltips } from 'astro-tooltips';
 import { getHtmlLang, getLocaleFromUrl, stripLocaleFromPath } from '@/i18n';
@@ -66,6 +67,7 @@ const isPostPage = stripLocaleFromPath(Astro.url.pathname).startsWith('/post/');
     <AppShell articleTools={articleTools} post={post} siderType={siderType} isPostPage={isPostPage}>
       <slot />
     </AppShell>
+    <Analytics />
   </body>
 </html>
 
