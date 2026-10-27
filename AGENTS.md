@@ -148,6 +148,10 @@ pages/ → components/ → hooks/ → lib/ → constants/
 
 **Featured Series**: Special category-based content series with dedicated pages and homepage highlights. Configured via `featuredSeries` in `config/site.yaml`. Each series requires a unique `slug` (must not conflict with reserved routes) and `categoryName`. Supports multiple series, individual enable/disable, and homepage highlight control. Dynamic routes generated at `[seriesSlug].astro`.
 
+**Homepage feed**: `src/lib/content/home-posts.ts` partitions the publication-date timeline into actual highlights,
+manual pins and the remaining feed. Series membership never hides all series posts. The homepage and `/posts/*`
+pagination both consume `getHomePagePosts().regularPosts`; verify changes with `pnpm test:content`.
+
 **Bangumi Page**: Optional media tracking page integrating [Bangumi API](https://api.bgm.tv). Configured via `bangumi` section in `config/site.yaml` — comment out to disable (page + navigation auto-hidden). Data fetched client-side in React (`BangumiCollection` component with `client:load`). Types in `src/types/bangumi.ts`, API client in `src/lib/bangumi/`, data hook in `src/hooks/useBangumiData.ts`. Navigation item auto-injected via `routers` in `src/constants/site-config.ts`.
 
 **Theme System**: Dark/light toggle with localStorage, inline check in `<head>` prevents FOUC.

@@ -13,6 +13,7 @@ import { defaultLocale } from '@/i18n/config';
 import { extractTextFromMarkdown } from '../sanitize';
 import { memoize } from './cache';
 import { buildCategoryPath } from './category-path';
+import { selectHomePosts } from './home-posts';
 import { filterPostsByLocale, getPostSlug } from './locale';
 
 /** WeakMap-based cache for reading-time results — auto-GC when post objects are collected */
@@ -398,7 +399,7 @@ export async function getHomeHighlightedPosts(locale?: string): Promise<BlogPost
 }
 
 /**
- * 优化的首页数据获取 - 单次遍历获取所有需要的数据
+ * 首页高亮、置顶与按发布时间排序的文章列表；分页使用同一结果。
  * @returns 包含高亮文章、置顶文章和普通文章的对象
  */
 export async function getHomePagePosts(locale?: string): Promise<{
@@ -406,50 +407,5 @@ export async function getHomePagePosts(locale?: string): Promise<{
   stickyPosts: BlogPost[];
   regularPosts: BlogPost[];
 }> {
-  const allPosts = await getSortedPosts(locale);
-  const highlightedSeries = getEnabledSeries().filter((series) => series.highlightOnHome !== false);
-  const categoryNames = getFeaturedCategoryNames();
-
-  // 用于追踪每个高亮系列的最新文章
-  const seriesLatestMap = new Map<string, BlogPost>();
-
-  const stickyPosts: BlogPost[] = [];
-  const regularPosts: BlogPost[] = [];
-
-  // 单次遍历所有文章
-  for (const post of allPosts) {
-    // 检查是否属于任何 featured 系列
-    const isFeatured = categoryNames.some((catName) => isPostInCategory(post, catName));
-
-    if (isFeatured) {
-      // 检查是否属于高亮系列，并记录最新文章
-      for (const series of highlightedSeries) {
-        if (isPostInCategory(post, series.categoryName)) {
-          if (!seriesLatestMap.has(series.categoryName)) {
-            seriesLatestMap.set(series.categoryName, post);
-          }
-          break;
-        }
-      }
-      // 跳过所有 featured 系列文章，不加入普通列表
-      continue;
-    }
-
-    if (post.data?.sticky) {
-      stickyPosts.push(post);
-    } else {
-      regularPosts.push(post);
-    }
-  }
-
-  // 提取高亮文章（保持系列定义的顺序）
-  const highlightedPosts: BlogPost[] = [];
-  for (const series of highlightedSeries) {
-    const post = seriesLatestMap.get(series.categoryName);
-    if (post) {
-      highlightedPosts.push(post);
-    }
-  }
-
-  return { highlightedPosts, stickyPosts, regularPosts };
+  return selectHomePosts(await getSortedPosts(locale), getEnabledSeries());
 }

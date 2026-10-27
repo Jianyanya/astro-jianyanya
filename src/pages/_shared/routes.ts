@@ -12,7 +12,7 @@ import {
   getCategoryList,
   getCategoryNameByLink,
   getEnabledSeries,
-  getNonFeaturedPosts,
+  getHomePagePosts,
   getPostSlug,
   getSortedPosts,
   normalizeTag,
@@ -59,6 +59,6 @@ export const seriesRoute = localePaths(() =>
 );
 
 export const postListRoute = localePaths(async ({ locale, localeParams, paginate }) => {
-  const posts = await getNonFeaturedPosts(locale);
-  return paginate(posts, { pageSize: PAGINATION.pageSize, params: localeParams });
+  const { regularPosts } = await getHomePagePosts(locale);
+  return paginate(regularPosts, { pageSize: PAGINATION.pageSize, params: localeParams });
 });

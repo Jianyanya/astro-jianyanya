@@ -31,6 +31,7 @@
     "knowledge:import-cloudflare": "node --import tsx scripts/lingyue/import-cloudflare.ts",
     "publish:blog": "pnpm build && node --import tsx scripts/lingyue/release.ts",
     "test:lingyue": "pnpm knowledge:tokenizers && node --import tsx --test --test-concurrency=1 test/lingyue/*.test.ts",
+    "test:content": "node --import tsx --test test/content/*.test.ts",
     "generate:summaries:force": "npx tsx src/scripts/generateSummaries.ts --force",
     "generate:all": "npm run generate:lqips && npm run generate:summaries && npm run generate:similarities",
     "build": "pnpm knowledge:tokenizers && pnpm koharu migrate --check && astro build && node --import tsx scripts/lingyue/verify-build.ts",

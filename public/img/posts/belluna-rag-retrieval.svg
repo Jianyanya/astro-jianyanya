@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1140" viewBox="0 0 1000 1140" role="img" aria-labelledby="title description">
+  <title id="title">铃月的 RAG 问答链路</title>
+  <desc id="description">用户问题先补齐上下文，再分别进行 pgvector 语义召回和关键词召回。RRF 合并前二十个候选，BGE 重排后按分数、去重与 token 预算选择最多六段证据，最后由 Flash 模型流式回答并标注来源。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none" stroke="var(--line)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#52332e" flood-opacity=".045"/></filter>
+  </defs>
+  <style>
+    :root{--canvas:#fffaf6;--card:#fff;--text:#432e2b;--muted:#806b65;--stroke:#e9dcd2;--line:#ba9282;--red:#b83b3b;--red-soft:#fff0eb;--gold:#916725;--gold-soft:#fff5de}
+    @media(prefers-color-scheme:dark){:root{--canvas:#251e27;--card:#302632;--text:#f6e8df;--muted:#c7afa9;--stroke:#59434e;--line:#bd9496;--red:#f19c96;--red-soft:#492f37;--gold:#e7c775;--gold-soft:#45382a}}
+    text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;fill:var(--text)}
+    .card{fill:var(--card);stroke:var(--stroke);stroke-width:1.5;filter:url(#shadow)}
+    .heading{font-size:25px;font-weight:650;letter-spacing:.2px}.detail{font-size:19px;fill:var(--muted)}
+    .eyebrow{font-size:16px;font-weight:650;letter-spacing:3px;fill:var(--red)}
+    .wire{fill:none;stroke:var(--line);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .tag{font-size:17px;font-weight:650;fill:var(--red)}.gold{fill:var(--gold)}
+    .number{font-size:17px;font-weight:650;fill:var(--red)}
+  </style>
+  <rect x="1" y="1" width="998" height="1138" rx="28" fill="var(--canvas)" stroke="var(--stroke)"/>
+  <text x="64" y="49" class="eyebrow">BELLUNA / ONLINE RAG</text>
+  <text x="64" y="95" font-size="34" font-weight="700">一个问题，怎样找到有依据的回答</text>
+  <text x="64" y="127" class="detail">理解问题 → 双路召回 → 融合精排 → 带来源的回答</text>
+  <rect x="783" y="32" width="145" height="34" rx="17" fill="var(--red-soft)"/>
+  <text x="855.5" y="55" text-anchor="middle" class="tag">只读博客知识</text>
+
+  <g class="wire">
+    <path d="M500 240V280" marker-end="url(#arrow)"/>
+    <path d="M500 366V384Q500 396 488 396H277Q265 396 265 408V430" marker-end="url(#arrow)"/>
+    <path d="M500 396H723Q735 396 735 408V430" marker-end="url(#arrow)"/>
+    <path d="M265 552V570Q265 582 277 582H500"/>
+    <path d="M735 552V570Q735 582 723 582H500"/>
+    <path d="M500 582V618" marker-end="url(#arrow)"/>
+    <path d="M500 702V716Q500 728 488 728H277Q265 728 265 740V754" marker-end="url(#arrow)"/>
+    <path d="M460 821H538" marker-end="url(#arrow)"/>
+    <path d="M735 886V910Q735 922 723 922H512Q500 922 500 934V954" marker-end="url(#arrow)"/>
+  </g>
+  <circle cx="500" cy="396" r="4" fill="var(--line)"/>
+  <circle cx="500" cy="582" r="4" fill="var(--line)"/>
+
+  <rect x="275" y="160" width="450" height="80" rx="18" class="card"/>
+  <circle cx="312" cy="200" r="17" fill="var(--red-soft)"/><text x="312" y="206" text-anchor="middle" class="number">01</text>
+  <text x="349" y="194" class="heading">用户问题</text>
+  <text x="349" y="222" class="detail">从当前页面发起一次提问</text>
+
+  <rect x="275" y="282" width="450" height="84" rx="18" class="card"/>
+  <circle cx="312" cy="324" r="17" fill="var(--red-soft)"/><text x="312" y="330" text-anchor="middle" class="number">02</text>
+  <text x="349" y="317" class="heading">补齐上下文</text>
+  <text x="349" y="346" class="detail">限定文章 · 补齐指代与历史</text>
+
+  <rect x="70" y="432" width="390" height="120" rx="18" class="card"/>
+  <rect x="70" y="432" width="5" height="120" rx="2.5" fill="var(--red)"/>
+  <text x="98" y="472" class="heading">pgvector 精确召回</text>
+  <text x="98" y="505" class="detail">BGE-M3 · 1024 维向量</text>
+  <text x="98" y="533" class="detail">余弦距离排序，取前 40 条</text>
+  <rect x="540" y="432" width="390" height="120" rx="18" class="card"/>
+  <rect x="540" y="432" width="5" height="120" rx="2.5" fill="var(--gold)"/>
+  <text x="568" y="472" class="heading">关键词召回</text>
+  <text x="568" y="505" class="detail">标题 4 · 标签 2 · 正文 1</text>
+  <text x="568" y="533" class="detail">词项加权匹配，取前 20 条</text>
+
+  <rect x="275" y="620" width="450" height="82" rx="18" class="card"/>
+  <text x="500" y="654" text-anchor="middle" class="heading">RRF 排名融合</text>
+  <text x="500" y="684" text-anchor="middle" class="detail">合并双路结果，保留前 20 个候选</text>
+
+  <rect x="70" y="756" width="390" height="130" rx="18" class="card"/>
+  <text x="98" y="797" class="heading">BGE Reranker 重排</text>
+  <text x="98" y="831" class="detail">重新判断问题与片段的相关程度</text>
+  <text x="98" y="859" class="detail">保留排序与 relevance_score</text>
+  <rect x="540" y="756" width="390" height="130" rx="18" fill="var(--red-soft)" stroke="var(--red)" stroke-opacity=".3" stroke-width="1.5"/>
+  <text x="568" y="797" class="heading">证据筛选</text>
+  <text x="568" y="831" class="detail">分数门槛 · 近重复去除</text>
+  <text x="568" y="859" class="tag">最多 6 段 / 3,500 tokens</text>
+
+  <rect x="275" y="956" width="450" height="104" rx="18" class="card"/>
+  <text x="500" y="993" text-anchor="middle" class="heading">铃月生成回答</text>
+  <text x="500" y="1024" text-anchor="middle" class="detail">人设 + 问题 + 证据 + 有限历史</text>
+  <text x="500" y="1048" text-anchor="middle" class="tag">Flash 流式输出 · 标注来源 [S1]</text>
+  <text x="500" y="1102" text-anchor="middle" class="detail">同一有效知识版本 · 撤回过滤 · 证据不足时不硬凑资料</text>
+</svg>
