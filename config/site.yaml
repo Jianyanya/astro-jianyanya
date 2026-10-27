@@ -376,12 +376,21 @@ announcements:
 # 不设置则使用内置的 21 张默认封面 (/img/cover/1~21.webp)
 # =============================================================================
 defaultCoverList:
-  # 自定义封面（bg1~bg6）
+  # 自定义封面（保留原图于工作区 images，站内使用压缩 WebP）
   - /img/cover-custom/bg1.webp
   - /img/cover-custom/bg2.webp
   - /img/cover-custom/bg3.webp
   - /img/cover-custom/bg5.webp
   - /img/cover-custom/bg6.webp
+  - /img/cover-custom/b6.webp
+  - /img/cover-custom/b7.webp
+  - /img/cover-custom/b11.webp
+  - /img/cover-custom/b13.webp
+  - /img/cover-custom/b18.webp
+  - /img/cover-custom/d1.webp
+  - /img/cover-custom/d2.webp
+  - /img/cover-custom/d3.webp
+  - /img/cover-custom/d4.webp
   # 内置 21 张默认封面
   - /img/cover/1.webp
   - /img/cover/2.webp
