@@ -96,6 +96,7 @@
     "@tanstack/react-virtual": "^3.14.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.10.3",
     "@waline/client": "^3.8.0",
     "astro": "7.1.3",
