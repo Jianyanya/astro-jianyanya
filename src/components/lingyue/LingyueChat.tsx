@@ -1,8 +1,9 @@
 import { ErrorBoundary } from '@components/common/ErrorBoundary';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import { MessageBody } from './MessageBody';
 import { ChatError, consumeStream } from './stream';
+import { useChatAccess } from './useChatAccess';
 import './lingyue.css';
 
 const sourceSchema = z.object({
@@ -41,33 +42,26 @@ function Panel() {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+  const [waitingForCooldown, setWaitingForCooldown] = useState(false);
   const [outcome, setOutcome] = useState<'idle' | 'complete' | 'interrupted' | 'error'>('idle');
-  const [remaining, setRemaining] = useState<number | null>(null);
+  const { access, fault, refresh: refreshQuota, logout, deferUntil, cooldown, canSend } = useChatAccess(open);
+  const [historyOwner, setHistoryOwner] = useState('');
   const [articleId, setArticleId] = useState('');
   const controller = useRef<AbortController | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const bottom = useRef<HTMLDivElement>(null);
-  const ready = useRef(false);
   const followLatest = useRef(true);
-
-  const refreshQuota = useCallback(() => {
-    void fetch('/api/lingyue/quota', { credentials: 'same-origin' })
-      .then((response) => response.json())
-      .then((data: unknown) => {
-        const q = z.object({ remaining: z.number().nonnegative() }).safeParse(data);
-        if (q.success) setRemaining(q.data.remaining);
-      })
-      .catch(() => {});
-  }, []);
   useEffect(() => {
-    try {
-      const saved = historySchema.safeParse(JSON.parse(sessionStorage.getItem(storageKey) ?? '[]'));
-      if (saved.success) setMessages(saved.data.filter((turn) => turn.complete));
-    } catch {
-      /* Storage is optional in privacy modes. */
+    if (waitingForCooldown && cooldown === 0 && canSend) {
+      setError('');
+      setWaitingForCooldown(false);
     }
-    ready.current = true;
+  }, [waitingForCooldown, cooldown, canSend]);
+
+  useEffect(() => {
+    const result = new URL(window.location.href).searchParams.get('lingyue_login');
+    if (result === 'failed' || result === 'cancelled') setError('登录没接上，想聊的时候再点一下 GitHub 登录喵~');
     const show = () => {
       setOpen(true);
       refreshQuota();
@@ -88,13 +82,26 @@ function Panel() {
     };
   }, [refreshQuota]);
   useEffect(() => {
-    if (ready.current)
+    const account = access?.user?.id ?? '';
+    let restored: Turn[] = [];
+    if (account)
       try {
-        sessionStorage.setItem(storageKey, JSON.stringify(messages.slice(-24)));
+        const saved = historySchema.safeParse(JSON.parse(sessionStorage.getItem(`${storageKey}:${account}`) ?? '[]'));
+        if (saved.success) restored = saved.data.filter((turn) => turn.complete);
       } catch {
-        /* Optional. */
+        /* Optional in privacy modes. */
       }
-  }, [messages]);
+    setMessages(restored);
+    setHistoryOwner(account);
+  }, [access?.user?.id]);
+  useEffect(() => {
+    if (!access?.user?.id || historyOwner !== access.user.id) return;
+    try {
+      sessionStorage.setItem(`${storageKey}:${historyOwner}`, JSON.stringify(messages.slice(-24)));
+    } catch {
+      /* Optional. */
+    }
+  }, [messages, historyOwner, access?.user?.id]);
   useEffect(() => {
     if (open) {
       dialog.current?.show();
@@ -126,7 +133,7 @@ function Panel() {
   }
   async function send() {
     const message = draft.trim();
-    if (!message || busy || controller.current) return;
+    if (!message || busy || controller.current || !canSend) return;
     followLatest.current = true;
     const abort = new AbortController();
     controller.current = abort;
@@ -141,6 +148,7 @@ function Panel() {
     ]);
     setDraft('');
     setError('');
+    setWaitingForCooldown(false);
     setOutcome('idle');
     setBusy(true);
     setStatus('让我翻翻博客里的资料喵~');
@@ -162,10 +170,17 @@ function Panel() {
         else if (event === 'sources')
           updateLast((turn) => ({ ...turn, sources: z.object({ sources: z.array(sourceSchema) }).parse(value).sources }));
         else if (event === 'done') updateLast((turn) => ({ ...turn, complete: true }));
-        else if (event === 'error') throw new ChatError(z.object({ message: z.string() }).parse(value).message);
+        else if (event === 'error') {
+          const data = z.object({ message: z.string(), retryAt: z.number().optional() }).parse(value);
+          throw new ChatError(data.message, data.retryAt);
+        }
       });
       setOutcome('complete');
     } catch (cause) {
+      if (cause instanceof ChatError && cause.retryAt) {
+        deferUntil(cause.retryAt);
+        setWaitingForCooldown(true);
+      }
       setOutcome(abort.signal.aborted ? 'interrupted' : 'error');
       setError(
         abort.signal.aborted
@@ -181,6 +196,12 @@ function Panel() {
       refreshQuota();
     }
   }
+  const accessMessage =
+    access?.authenticated && !busy && !access.available && cooldown === 0
+      ? access.remaining === 0
+        ? '今天先聊到这里，明天再来找我喵~'
+        : '我这会儿要休息一下，稍后再来找我喵~'
+      : '';
   return (
     <dialog
       id="lingyue-dialog"
@@ -259,8 +280,16 @@ function Panel() {
           <div ref={bottom} />
         </div>
         <output className="lingyue-status" aria-live="polite">
-          {error || status || (articleId ? '正在阅读文章，可直接问“这篇文章…”' : '可检索博客公开文章')}
-          {remaining !== null && <span>今日剩余 {remaining} 次</span>}
+          {fault ||
+            accessMessage ||
+            error ||
+            status ||
+            (access && !access.authenticated
+              ? '用 GitHub 登录后，就能和我聊天喵~'
+              : articleId
+                ? '正在阅读文章，可直接问“这篇文章…”'
+                : '可检索博客公开文章')}
+          {access?.authenticated && <span>今日剩余 {access.remaining} 次</span>}
         </output>
         <form
           className="lingyue-form"
@@ -269,6 +298,43 @@ function Panel() {
             void send();
           }}
         >
+          {access && !access.authenticated && (
+            <div className="lingyue-signin">
+              {access.authConfigured ? (
+                <a
+                  href={`/api/lingyue/auth/login?returnTo=${encodeURIComponent(window.location.pathname + window.location.search)}`}
+                >
+                  使用 GitHub 登录
+                </a>
+              ) : (
+                <p>登录入口还在准备，稍后再来找我喵~</p>
+              )}
+              <small>每个 GitHub 账号每天 20 次，次日零点恢复。</small>
+            </div>
+          )}
+          {access?.user && (
+            <div className="lingyue-account">
+              <span>GitHub · {access.user.login}</span>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  if (await logout()) {
+                    try {
+                      sessionStorage.removeItem(`${storageKey}:${access.user!.id}`);
+                    } catch {
+                      /* Optional. */
+                    }
+                    setMessages([]);
+                    setDraft('');
+                    setError('');
+                  }
+                }}
+              >
+                退出登录
+              </button>
+            </div>
+          )}
           <label className="sr-only" htmlFor="lingyue-message">
             给铃月的消息
           </label>
@@ -278,7 +344,8 @@ function Panel() {
             value={draft}
             maxLength={2000}
             rows={2}
-            placeholder="和铃月聊聊…"
+            disabled={!access?.authenticated}
+            placeholder={access?.authenticated ? '和铃月聊聊…' : '登录后和铃月聊聊…'}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
@@ -288,6 +355,11 @@ function Panel() {
             }}
           />
           <div className="lingyue-actions">
+            {(fault || (access?.authenticated && !access.available && cooldown === 0)) && (
+              <button type="button" onClick={refreshQuota}>
+                刷新状态
+              </button>
+            )}
             {error && !busy && (
               <button
                 type="button"
@@ -314,8 +386,8 @@ function Panel() {
                 停止生成
               </button>
             ) : (
-              <button type="submit" disabled={!draft.trim() || remaining === 0}>
-                发送
+              <button type="submit" disabled={!draft.trim() || !canSend}>
+                {cooldown > 0 ? `${cooldown} 秒后可发送` : '发送'}
               </button>
             )}
           </div>

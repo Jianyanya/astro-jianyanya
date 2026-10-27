@@ -1,3 +1,4 @@
+import { Auth } from './auth.js';
 import { loadConfig } from './config.js';
 import { database } from './database.js';
 import type { Runtime } from './handler.js';
@@ -18,6 +19,13 @@ export function getRuntime(env: Record<string, unknown>): Runtime {
           .filter((host): host is string => typeof host === 'string' && /^[a-z0-9.-]+\.vercel\.app$/.test(host))
           .map((host) => `https://${host}`)
       : [];
-  runtime = { c, providers, origins, ledger: new Ledger(db, c), retrieval: new Retrieval(new Store(db), providers, c) };
+  runtime = {
+    c,
+    providers,
+    origins,
+    auth: new Auth(db, c),
+    ledger: new Ledger(db, c),
+    retrieval: new Retrieval(new Store(db), providers, c),
+  };
   return runtime;
 }

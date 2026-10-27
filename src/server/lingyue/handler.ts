@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import type { Auth } from './auth.js';
 import { answer } from './chat.js';
 import type { Config } from './config.js';
 import type { Ledger } from './ledger.js';
-import { identity, ipHash, PublicError } from './limits.js';
-import type { Providers } from './providers.js';
+import { ipHash, PublicError } from './limits.js';
+import { type Providers, UpstreamHTTPError } from './providers.js';
 import type { Retrieval } from './retrieval.js';
 import type { Usage } from './types.js';
 
@@ -20,6 +21,7 @@ const schema = z
   .strict();
 export interface Runtime {
   origins?: string[];
+  auth: Auth;
   c: Config;
   ledger: Ledger;
   providers: Providers;
@@ -58,7 +60,7 @@ export async function handleRequest(
 ) {
   const headers = new Headers({ 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
   const json = (status: number, data: unknown) => Response.json(data, { status, headers });
-  const { c, ledger, providers, retrieval } = runtime;
+  const { c, ledger, providers, retrieval, auth } = runtime;
   try {
     const path = new URL(request.url).pathname;
     if (!['/api/lingyue/chat', '/api/lingyue/quota'].includes(path)) return json(404, {});
@@ -68,20 +70,28 @@ export async function handleRequest(
       request.headers.get('sec-fetch-site') === 'cross-site'
     )
       throw new PublicError(403, '来博客里找我聊天吧喵~');
-    const ident = identity(request.headers.get('cookie') ?? undefined, c.COOKIE_SECRET);
-    headers.set('Set-Cookie', ident.cookie + (c.SITE_ORIGIN.startsWith('https:') ? '; Secure' : ''));
+    const user = await auth.user(request);
     const ip = ipHash(request.headers.get('x-vercel-forwarded-for') ?? 'local', c.COOKIE_SECRET);
     const quota = async () => {
-      const { remaining, available, resetsAt } = await ledger.quota(ident.visitor, ip);
-      return { remaining, available: available && Boolean(c.CHAT_API_KEY), resetsAt };
+      if (!user) return { authenticated: false, authConfigured: auth.configured, remaining: 0, available: false, retryAt: 0 };
+      const { remaining, available, resetsAt, retryAt } = await ledger.quota(user.visitor, ip);
+      return {
+        authenticated: true,
+        user: { id: user.id, login: user.login },
+        remaining,
+        available: available && Boolean(c.CHAT_API_KEY),
+        resetsAt,
+        retryAt,
+      };
     };
     if (path.endsWith('/quota') && request.method === 'GET') return json(200, await quota());
     if (path !== '/api/lingyue/chat' || request.method !== 'POST') return json(405, {});
+    if (!user) throw new PublicError(401, '先用 GitHub 登录，再来陪我聊天喵~');
     if (!c.CHAT_API_KEY) throw new PublicError(503, '我还在准备中，过会儿来找我喵~');
     const parsed = schema.safeParse(await readBody(request));
     if (!parsed.success) throw new PublicError(400, '这条消息没接好，重新发一句给我吧喵~');
     const id = parsed.data.requestId;
-    await ledger.reserve(id, ident.visitor, ip);
+    await ledger.reserve(id, user.visitor, ip);
     const cancel = new AbortController();
     const signal = AbortSignal.any([cancel.signal, request.signal, AbortSignal.timeout(110000)]);
     let called = false;
@@ -129,8 +139,19 @@ export async function handleRequest(
         emit('done', { quota: await quota() });
       } catch (error) {
         console.warn(JSON.stringify({ event: 'chat_failed', stage, name: error instanceof Error ? error.name : 'Unknown' }));
+        let retryAt: number | undefined;
+        if (error instanceof UpstreamHTTPError) {
+          // Only definite pre-generation rejections are refundable. A gateway 5xx may hide billed work.
+          if ([400, 401, 403, 404, 413, 415, 422, 429].includes(error.upstreamStatus)) called = false;
+          if (error.upstreamStatus === 429 || error.upstreamStatus === 503)
+            retryAt = await ledger.coolDown(error.retryAfterSeconds).catch(() => Date.now() + c.MODEL_COOLDOWN_SECONDS * 1000);
+        }
+        await ledger.settle(id, called, usage).catch(() => {});
         try {
-          emit('error', { message: '刚才没能把话说完，等会儿再陪你看看喵~' });
+          emit('error', {
+            message: retryAt ? '让我歇一小会儿，倒计时结束再来找我喵~' : '刚才没能把话说完，等会儿再陪你看看喵~',
+            retryAt,
+          });
         } catch {
           /* disconnected */
         }
@@ -148,8 +169,18 @@ export async function handleRequest(
     headers.set('Content-Type', 'text/event-stream; charset=utf-8');
     return new Response(stream, { headers });
   } catch (error) {
+    console.warn(
+      JSON.stringify({
+        event: 'chat_rejected',
+        status: error instanceof PublicError ? error.status : 503,
+        coolingDown: Boolean(error instanceof PublicError && error.retryAt),
+      }),
+    );
+    if (error instanceof PublicError && error.retryAt)
+      headers.set('Retry-After', String(Math.max(1, Math.ceil((error.retryAt - Date.now()) / 1000))));
     return json(error instanceof PublicError ? error.status : 503, {
       message: error instanceof PublicError ? error.message : '刚才没接上话，等会儿再来找我喵~',
+      retryAt: error instanceof PublicError ? error.retryAt : undefined,
     });
   }
 }

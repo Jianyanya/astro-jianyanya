@@ -18,6 +18,23 @@ const streamSchema = z.object({
   usage: usageSchema.nullish(),
 });
 
+/** Provider HTTP failure before an accepted stream; timeout/5xx billing may still be uncertain. */
+export class UpstreamHTTPError extends PublicError {
+  constructor(
+    readonly upstreamStatus: number,
+    readonly retryAfterSeconds: number,
+  ) {
+    super(502, '我这会儿有点忙，稍等一下再陪你聊喵~');
+    this.name = `UpstreamHTTP${upstreamStatus}`;
+  }
+}
+
+function retryAfter(value: string | null) {
+  if (!value) return 0;
+  const seconds = /^\d+(?:\.\d+)?$/.test(value) ? Number(value) : (Date.parse(value) - Date.now()) / 1000;
+  return Number.isFinite(seconds) ? Math.min(86400, Math.max(0, Math.ceil(seconds))) : 0;
+}
+
 /** POST fetch stream parser, including CRLF, split UTF-8 and multiple data lines. */
 async function* readSSE(body: ReadableStream<Uint8Array>): AsyncGenerator<string> {
   const reader = body.getReader();
@@ -127,12 +144,11 @@ export class Providers {
       }),
       signal: AbortSignal.any([signal, AbortSignal.timeout(90000)]),
     });
-    if (!response.ok || !response.body) {
+    if (!response.ok) {
       await response.body?.cancel();
-      const error = new PublicError(502, '模型服务暂时不可用，请稍后再试。');
-      error.name = `UpstreamHTTP${response.status}`;
-      throw error;
+      throw new UpstreamHTTPError(response.status, retryAfter(response.headers.get('retry-after')));
     }
+    if (!response.body) throw new PublicError(502, '刚才没接上话，稍后再来找我喵~');
     let finished = false;
     for await (const data of readSSE(response.body)) {
       if (data === '[DONE]') {

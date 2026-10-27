@@ -75,6 +75,7 @@ const PAGE_MODULES = import.meta.glob('/src/pages/**/*.{astro,md,mdx,ts}');
 /** Root routes that intentionally have no `[lang]/` mirror. */
 const MIRROR_EXEMPT = new Set([
   'api/lingyue/[action]',
+  'api/lingyue/auth/[action]',
   // Static hosts serve a single /404.html; the page localizes itself at runtime.
   '404',
   // Locale-agnostic RSS stylesheet asset.

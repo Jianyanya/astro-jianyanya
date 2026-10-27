@@ -192,7 +192,14 @@ instructions do not govern the new backend.
 - `src/features/lingyue/`: exports private `.cache/lingyue/snapshot.json` and a public hash-only
   `/lingyue-version.json`. Remove the intermediate body snapshot before adapter bundling / public delivery.
 - Never publish `.cache/lingyue`, `.env.local`, database credentials, owner/publisher URLs or CLI auth.
-  Existing model keys are owner-funded server configuration. No visitor login or BYOK.
+  Existing model keys are owner-funded server configuration; no visitor BYOK.
+- GitHub login is required for chat. `auth.ts` implements OAuth code + PKCE/state and hashed server sessions;
+  `auth-cookies.ts` protects the short-lived OAuth flow. Never persist GitHub access tokens or request repo scopes.
+  Runtime can mutate `auth_sessions`, but knowledge remains read-only. Quotas key on the verified stable GitHub ID.
+- Each account gets 20 messages/day (Asia/Shanghai). User spacing defaults to 10s; shared model starts to 2s,
+  concurrency to 2. Model 429/503 trips a PostgreSQL-backed cooldown (at least 30s, honoring Retry-After).
+  Definite 429 rejection refunds the reservation; uncertain network/5xx usage stays conservatively budgeted.
+  `useChatAccess.ts` displays cooldown/login status without starting model calls or auto-resubmitting questions.
 - `docs/features/lingyue-deployment.md` is the new deployment and article publishing guide.
 - Required checks: blog lint/check/build, `pnpm test:lingyue`; Cloudflare checks remain regression checks for fallback.
   PGlite tests execute PostgreSQL + pgvector locally, but cannot establish live Neon multi-connection concurrency,

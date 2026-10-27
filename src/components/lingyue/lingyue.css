@@ -253,6 +253,32 @@
   background: transparent;
   font-size: 14px;
 }
+.lingyue-signin,
+.lingyue-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.lingyue-signin {
+  flex-direction: column;
+  align-items: stretch;
+}
+.lingyue-signin a {
+  background: #b94177;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+.lingyue-signin small {
+  opacity: 0.7;
+}
+.lingyue-account button {
+  text-decoration: underline;
+}
 .lingyue-actions {
   display: flex;
   justify-content: space-between;

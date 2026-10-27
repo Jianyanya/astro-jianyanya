@@ -5,7 +5,10 @@
   "functions": {
     "api/editor/og.ts": { "maxDuration": 15 }
   },
-  "rewrites": [{ "source": "/api/lingyue/:action(chat|quota)", "destination": "/_render" }],
+  "rewrites": [
+    { "source": "/api/lingyue/:action(chat|quota)", "destination": "/_render" },
+    { "source": "/api/lingyue/auth/:action(login|callback|logout)", "destination": "/_render" }
+  ],
   "headers": [
     { "source": "/api/lingyue/:path*", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
     { "source": "/lingyue-version.json", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }

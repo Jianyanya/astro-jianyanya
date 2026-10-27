@@ -1,31 +1,14 @@
-import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import type { Config } from './config.js';
 
 export class PublicError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    readonly retryAt?: number,
   ) {
     super(message);
   }
-}
-
-export function identity(cookie: string | undefined, secret: string): { visitor: string; cookie: string } {
-  const sign = (id: string) => createHmac('sha256', secret).update(id).digest('hex');
-  const value = cookie
-    ?.split(';')
-    .map((v) => v.trim())
-    .find((v) => v.startsWith('lingyue='))
-    ?.slice(8);
-  const [id, signature] = value?.split('.') ?? [];
-  let visitor = randomUUID() as string;
-  if (id && /^[a-f0-9-]{36}$/.test(id) && signature && /^[a-f0-9]{64}$/.test(signature)) {
-    if (timingSafeEqual(Buffer.from(sign(id)), Buffer.from(signature))) visitor = id;
-  }
-  return {
-    visitor,
-    cookie: `lingyue=${visitor}.${sign(visitor)}; Path=/api/lingyue; HttpOnly; SameSite=Strict; Max-Age=2592000`,
-  };
 }
 
 export const ipHash = (ip: string, secret: string) => createHmac('sha256', secret).update(`ip:${ip}`).digest('hex');

@@ -1,7 +1,10 @@
 export async function consumeStream(response: Response, onEvent: (event: string, value: unknown) => void) {
   if (!response.ok) {
-    const result = (await response.json().catch(() => ({}))) as { message?: string };
-    throw new ChatError(typeof result.message === 'string' ? result.message : '等会儿再陪你看看喵~');
+    const result = (await response.json().catch(() => ({}))) as { message?: string; retryAt?: unknown };
+    throw new ChatError(
+      typeof result.message === 'string' ? result.message : '等会儿再陪你看看喵~',
+      typeof result.retryAt === 'number' ? result.retryAt : undefined,
+    );
   }
   if (!response.body || !response.headers.get('content-type')?.includes('text/event-stream')) throw new Error('回复连接异常。');
   const reader = response.body.getReader();
@@ -43,4 +46,11 @@ export async function consumeStream(response: Response, onEvent: (event: string,
   }
 }
 /** Only intentional visitor-facing messages may reach the chat status area. */
-export class ChatError extends Error {}
+export class ChatError extends Error {
+  constructor(
+    message: string,
+    readonly retryAt?: number,
+  ) {
+    super(message);
+  }
+}

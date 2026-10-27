@@ -5,6 +5,37 @@
 Cloudflare 继续管理 DNS；旧 Pages 自动构建已暂停，旧助手 Worker 路由已停用。
 旧 Pages 部署、Worker、D1 和 Vectorize 保留用于回退。
 
+## GitHub 登录与使用频次
+
+聊天需要博客自己的 GitHub OAuth 会话，评论区 Giscus 登录不能替代服务端验证。
+创建 OAuth App：Homepage URL 为 `https://belluna.love`，Callback URL 为
+`https://belluna.love/api/lingyue/auth/callback`。将 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET`
+放在本机 `.env.local` 和 Vercel Production 服务端环境变量中，不使用 `PUBLIC_` 前缀。
+本地调试 OAuth 时另建使用本地回调地址的 App；不要给不可信 Preview 部署生产密钥。
+
+`pnpm knowledge:migrate` 会顺序执行幂等 SQL，增加登录会话和共享冷却字段，补充运行账号权限。
+OAuth 使用 state 和 PKCE；仅读取公开账号信息，不请求仓库权限，GitHub Token 只在回调请求中使用。
+会话有效期 7 天，浏览器保存 HttpOnly Cookie，数据库只保存随机会话 Token 的哈希。
+退出会撤销当前会话。浏览器对话按账号分别在标签页暂存，不上传为长期记忆。
+
+每个 GitHub 账号每天 **20 次**（`DAILY_VISITOR_LIMIT=20`，北京时间零点恢复），
+清缓存、换设备或重新登录不会重置账号额度。还有原有 IP、全站次数和费用上限。
+`USER_COOLDOWN_SECONDS=10` 控制同账号请求间隔；`MODEL_START_INTERVAL_SECONDS=2` 控制全站开始间隔，
+`MAX_CONCURRENT=2` 控制并发。上游返回 429/503 时，共享冷却至少
+`MODEL_COOLDOWN_SECONDS=30` 秒，较长的 `Retry-After` 也会被尊重。
+前端倒计时结束只刷新状态，不会自动重新提交问题。
+
+明确被 429 等请求校验错误拒绝的生成退还次数和预算；断流、超时、网关 5xx 等未知用量仍保留预算。
+这些间隔是本站保护设置，不代表服务商实际配额；持续限流仍需检查服务商的限额和服务状态。
+服务端只记录阶段、错误类别和 HTTP 状态，不记录 Key、OAuth Code、GitHub Token 或对话正文。
+
+## 调整聊天框左侧位置
+
+大屏定位由 `src/components/lingyue/companion.ts` 的 `positionDock()` 计算：
+`textLeft - width - 24` 中 `24` 是聊天框与正文的间隔，增大它就继续向左移动。
+`src/components/lingyue/dock.css` 的 `--lingyue-dock-left: 12px` 是小屏/回退位置，
+大屏会被 JS 设置的变量覆盖。调整时检查是否越过屏幕左边缘，不要修改文章容器宽度或边距。
+
 ## 模块位置
 
 | 目录 | 职责 |

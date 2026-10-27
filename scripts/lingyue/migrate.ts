@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { database } from '../../src/server/lingyue/database.js';
 import { localEnv, root } from './files.js';
 
@@ -9,7 +9,9 @@ async function main() {
   const db = database(connection);
   try {
     await db.transaction(async (tx) => {
-      await tx.query(await readFile(new URL('migrations/lingyue/001_knowledge.sql', root), 'utf8'));
+      const directory = new URL('migrations/lingyue/', root);
+      for (const file of (await readdir(directory)).filter((file) => /^\d+_.+\.sql$/.test(file)).sort())
+        await tx.query(await readFile(new URL(file, directory), 'utf8'));
     });
     const exists = await db.query("SELECT rolname FROM pg_roles WHERE rolname='lingyue_runtime'");
     let runtimeUrl: string | undefined;
@@ -24,6 +26,7 @@ async function main() {
     await db.query(`GRANT USAGE ON SCHEMA lingyue TO lingyue_runtime;
       GRANT SELECT ON lingyue.control,lingyue.chunks TO lingyue_runtime;
       GRANT SELECT,INSERT,UPDATE,DELETE ON lingyue.requests TO lingyue_runtime;
+      GRANT SELECT,INSERT,DELETE ON lingyue.auth_sessions TO lingyue_runtime;
       GRANT SELECT,UPDATE ON lingyue.quota_lock TO lingyue_runtime;`);
     if (runtimeUrl) {
       const file = new URL('.env.local', root);

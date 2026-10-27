@@ -1,30 +1,22 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { after, before, beforeEach, test } from 'node:test';
-import { PGlite } from '@electric-sql/pglite';
-import { vector } from '@electric-sql/pglite-pgvector';
 import { verifyDeployment } from '../../scripts/lingyue/deployment.js';
 import { chunkDocument } from '../../scripts/lingyue/markdown.js';
 import { cacheKey } from '../../scripts/lingyue/prepared.js';
 import { activate, cleanup, stage } from '../../scripts/lingyue/publish.js';
-import { loadConfig } from '../../src/server/lingyue/config.js';
-import type { Database, Query } from '../../src/server/lingyue/database.js';
+import { Auth } from '../../src/server/lingyue/auth.js';
+import type { Database } from '../../src/server/lingyue/database.js';
 import { handleRequest, readBody } from '../../src/server/lingyue/handler.js';
 import { Ledger } from '../../src/server/lingyue/ledger.js';
 import { manifestOf, type Snapshot } from '../../src/server/lingyue/manifest.js';
 import { Providers } from '../../src/server/lingyue/providers.js';
 import { Retrieval } from '../../src/server/lingyue/retrieval.js';
 import { Store } from '../../src/server/lingyue/store.js';
+import { testConfig as c, createTestDatabase } from './database-fixture.js';
 
 // Actual PostgreSQL + pgvector in WASM, not a SQL string mock. No network/model credentials used.
-let pg: PGlite;
+let fixture: Awaited<ReturnType<typeof createTestDatabase>>;
 let db: Database;
-const wrap = (client: Pick<PGlite, 'query'>): Query => ({
-  async query<T extends Record<string, unknown>>(sql: string, values: unknown[] = []) {
-    return (await client.query<T>(sql, values)).rows;
-  },
-});
-const c = loadConfig({ COOKIE_SECRET: 'fictional-cookie-secret-at-least-32-characters', CHAT_API_KEY: 'test-only' });
 const values = (i = 0) => Array.from({ length: 1024 }, (_, n) => (n === i ? 1 : 0));
 function prepared(text = '向量数据库支持语义检索。', includeSecond = true) {
   const snapshot: Snapshot = {
@@ -43,17 +35,14 @@ function prepared(text = '向量数据库支持语义检索。', includeSecond =
   };
 }
 before(async () => {
-  pg = new PGlite({ extensions: { vector } });
-  await pg.exec(await readFile(new URL('../../migrations/lingyue/001_knowledge.sql', import.meta.url), 'utf8'));
-  db = { ...wrap(pg), transaction: (action) => pg.transaction((tx) => action(wrap(tx))) };
+  fixture = await createTestDatabase();
+  db = fixture.db;
 });
 beforeEach(async () => {
-  await pg.exec(
-    'UPDATE lingyue.control SET active_version=NULL; DELETE FROM lingyue.chunks; DELETE FROM lingyue.versions; DELETE FROM lingyue.embeddings; DELETE FROM lingyue.requests;',
-  );
+  await fixture.reset();
 });
 after(async () => {
-  await pg?.close();
+  await fixture?.close();
 });
 
 test('staging does not activate; activation switches text and vectors together, repeated stage is idempotent', async () => {
@@ -159,8 +148,8 @@ test('a pre-model failure refunds its reservation and permits a new request', as
   const id = crypto.randomUUID();
   await ledger.reserve(id, 'visitor', 'ip');
   await ledger.settle(id, false);
-  assert.equal((await ledger.quota('visitor', 'ip')).remaining, 30);
-  await ledger.reserve(crypto.randomUUID(), 'visitor', 'ip');
+  assert.equal((await ledger.quota('visitor', 'ip')).remaining, 20);
+  await ledger.reserve(crypto.randomUUID(), 'visitor', 'ip', Date.now() + 3000);
 });
 
 test('HTTP contract streams text and citations, settles quota and blocks cross-site requests', async () => {
@@ -184,11 +173,18 @@ test('HTTP contract streams text and citations, settles quota and blocks cross-s
       });
     return new Response(events);
   }) as typeof fetch);
-  const runtime = { c, providers, ledger: new Ledger(db, c), retrieval: new Retrieval(new Store(db), providers, c) };
+  const auth = new Auth(db, c);
+  const cookie = (await auth.issue({ id: 12345, login: 'fictional-reader' })).split(';')[0]!;
+  const runtime = { c, auth, providers, ledger: new Ledger(db, c), retrieval: new Retrieval(new Store(db), providers, c) };
   const request = (id: string) =>
     new Request('https://belluna.love/api/lingyue/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Origin: 'https://belluna.love', 'x-vercel-forwarded-for': '192.0.2.1' },
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://belluna.love',
+        'x-vercel-forwarded-for': '192.0.2.1',
+        Cookie: cookie,
+      },
       body: JSON.stringify({ message: '向量怎么检索', history: [], requestId: id }),
     });
   const id = crypto.randomUUID();
