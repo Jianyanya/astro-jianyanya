@@ -1,7 +1,9 @@
 import { database } from '../../src/server/lingyue/database.js';
+import { manifestOf, snapshotSchema } from '../../src/server/lingyue/manifest.js';
 import { verifyDeployment } from './deployment.js';
 import { cache, jsonFile, localEnv, saveJson } from './files.js';
 import { activate, cleanup, stage } from './publish.js';
+import { beginPublication, type Publication } from './withdrawals.js';
 
 async function main() {
   const env = await localEnv();
@@ -13,6 +15,13 @@ async function main() {
       console.log('退休知识版本清理完成。');
       return;
     }
+    if (mode === 'begin') {
+      const snapshot = snapshotSchema.parse(await jsonFile(new URL('snapshot.json', cache)));
+      const publication = await beginPublication(db, snapshot);
+      await saveJson(new URL('publication.json', cache), { ...publication, ...manifestOf(snapshot) });
+      console.log(`已开始发布，撤回 ${publication.withdrawn} 篇文章；下一步生成并上传新版本。`);
+      return;
+    }
     if (mode !== 'stage' && mode !== 'activate') throw new Error('Unknown mode');
     const prepared = await jsonFile(new URL('prepared.json', cache));
     const manifest = await stage(db, prepared);
@@ -20,13 +29,13 @@ async function main() {
       console.log(`知识版本 ${manifest.version} 已上传，线上有效版本未改变。`);
       return;
     }
-    const [control] = await db.query<{ active_version: string | null }>(
-      'SELECT active_version FROM lingyue.control WHERE id=1',
-    );
+    const publication = (await jsonFile(new URL('publication.json', cache))) as Publication & { version: string };
+    if (publication.version !== manifest.version || typeof publication.sequence !== 'string')
+      throw new Error('请先为本次快照运行 knowledge:begin，不能复用旧发布凭据');
     const origin =
       process.argv.find((arg) => arg.startsWith('--origin='))?.slice(9) ?? env.SITE_ORIGIN ?? 'https://belluna.love';
     await verifyDeployment(origin, manifest);
-    await activate(db, manifest.version, control?.active_version ?? null);
+    await activate(db, manifest.version, publication.previousVersion, new Date(), publication.sequence);
     await saveJson(new URL('last-neon-sync.json', cache), { ...manifest, activatedAt: new Date().toISOString() });
     console.log(`已验证网站并启用知识版本 ${manifest.version}。`);
     try {

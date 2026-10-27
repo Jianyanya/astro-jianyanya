@@ -1,0 +1,746 @@
+{
+  "schema": 1,
+  "status": "assistant-curated; owner evidence review pending",
+  "created": "2026-10-27",
+  "cases": [
+    {
+      "id": "fact-01",
+      "split": "dev",
+      "kind": "fact",
+      "question": "萤语界面想做成什么主题、什么主色？",
+      "answer": "萤火虫主题，浅绿色，可调透明度毛玻璃。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "整体以萤火虫为主题,以浅绿色作为主题色,采用可调节透明度的毛玻璃材质"
+        }
+      ]
+    },
+    {
+      "id": "fact-02",
+      "split": "dev",
+      "kind": "fact",
+      "question": "Glowspire 准备用什么工具给 Qwen 做角色微调？",
+      "answer": "Unsloth + BF16 基座上的 LoRA 微调；最初 QLoRA 方案在调查后放弃。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "因此改用了BF16基座上的LoRA微调"
+        }
+      ]
+    },
+    {
+      "id": "fact-03",
+      "split": "dev",
+      "kind": "fact",
+      "question": "角色微调的学习率和 epoch 建议从多少开始？",
+      "answer": "5e-5，epoch 先设1。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "学习率 5e-5 起步，epoch 先设 1"
+        }
+      ]
+    },
+    {
+      "id": "fact-04",
+      "split": "dev",
+      "kind": "fact",
+      "question": "萤语怎么避免一段话还没说完就被截断？",
+      "answer": "Silero VAD 连续500–800毫秒静音判定说完，尾静音过短会截断。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "连续 500-800 毫秒静音判定为你这句话说完了"
+        }
+      ]
+    },
+    {
+      "id": "fact-05",
+      "split": "dev",
+      "kind": "fact",
+      "question": "语音注册时的声纹向量多少维？",
+      "answer": "CAM++ 提取192维声纹向量。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "提取出一个 192 维的声纹向量存到本地文件"
+        }
+      ]
+    },
+    {
+      "id": "fact-06",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "麦克风音频为什么统一到16kHz？",
+      "answer": "本地 whisper 只接受16kHz。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "采样率统一按 **16 kHz** 走，因为本地 whisper 只接受 16 kHz"
+        }
+      ]
+    },
+    {
+      "id": "fact-07",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "萤语采集音频每帧包含几个样本？",
+      "answer": "AudioWorklet 每帧512个样本。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "512 个样本一帧"
+        }
+      ]
+    },
+    {
+      "id": "fact-08",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "角色模型导出为本地运行格式的工具是什么？",
+      "answer": "llama.cpp 的 convert_hf_to_gguf.py 导出 GGUF。",
+      "evidence": [
+        {
+          "documentId": "glowspire",
+          "quote": "convert_hf_to_gguf.py"
+        }
+      ]
+    },
+    {
+      "id": "fact-09",
+      "split": "dev",
+      "kind": "fact",
+      "question": "这个座位系统的树模型是在预测恶意占座吗？",
+      "answer": "预测座位编号，不直接预测有人无人或恶意占座。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "它预测的是**座位编号**"
+        }
+      ]
+    },
+    {
+      "id": "fact-10",
+      "split": "dev",
+      "kind": "fact",
+      "question": "决策树前面的多帧降噪默认合并多少帧？",
+      "answer": "默认5帧，逐AP中位数。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "默认每 **5 帧**合并一次，逐 AP 取中位数降噪"
+        }
+      ]
+    },
+    {
+      "id": "fact-11",
+      "split": "dev",
+      "kind": "fact",
+      "question": "为什么有12个AP却向树输入24维？",
+      "answer": "相对RSSI和存在标记两组特征。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "12 个 AP 维度，因此输入是 24 个特征"
+        }
+      ]
+    },
+    {
+      "id": "fact-12",
+      "split": "dev",
+      "kind": "fact",
+      "question": "树模型训练用的 sklearn 类叫什么？",
+      "answer": "DecisionTreeClassifier，CART分类树。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "使用的是 sklearn 的 `DecisionTreeClassifier`，即 CART 分类树"
+        }
+      ]
+    },
+    {
+      "id": "fact-13",
+      "split": "dev",
+      "kind": "fact",
+      "question": "这棵座位决策树实际有多少个叶子？",
+      "answer": "实际深度12，54个叶节点。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "共有 **54 个叶节点**"
+        }
+      ]
+    },
+    {
+      "id": "fact-14",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "哪款手机在树与KNN实验中被完整留出？",
+      "answer": "Redmi；Honor和Pixel训练。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "我们用 Honor、Pixel 的数据训练，完整留出 Redmi 作为测试设备"
+        }
+      ]
+    },
+    {
+      "id": "fact-15",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "这次留出实验的 KNN 和树 Top-1 各是多少？",
+      "answer": "KNN93.06%，树65.62%；模拟数据，不是现场验收。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "|KNN|93.06%|100.00%|19.10%|\n|决策树|65.62%|80.21%|48.96%|"
+        }
+      ]
+    },
+    {
+      "id": "fact-16",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "树的0.8能直接说成有80%真实正确概率吗？",
+      "answer": "不能，它是叶节点训练类别频率，没有独立概率校准。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "当前决策树没有做独立概率校准"
+        }
+      ]
+    },
+    {
+      "id": "fact-17",
+      "split": "dev",
+      "kind": "fact",
+      "question": "WiFi指纹能证明拿手机的人一直在座位上吗？",
+      "answer": "不能，只能判断设备更可能的位置。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "它不能直接证明"
+        }
+      ]
+    },
+    {
+      "id": "fact-18",
+      "split": "dev",
+      "kind": "fact",
+      "question": "RSSI confidence=0.86 可以宣传为86%准确吗？",
+      "answer": "不能，需要实验校准。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "不能直接把 `0.86` 宣称成 86% 的真实准确率"
+        }
+      ]
+    },
+    {
+      "id": "fact-19",
+      "split": "dev",
+      "kind": "fact",
+      "question": "普通路由器日志能代替完整空间指纹吗？",
+      "answer": "不应默认代替；主要辅助设备在线离线。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "路由器日志适合辅助判断设备是否在线，不应默认当作完整的 WiFi 指纹定位数据"
+        }
+      ]
+    },
+    {
+      "id": "fact-20",
+      "split": "dev",
+      "kind": "fact",
+      "question": "采集WiFi指纹至少覆盖哪些时间段？",
+      "answer": "早中晚三个时间段。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "至少采集早、中、晚三个时间段"
+        }
+      ]
+    },
+    {
+      "id": "fact-21",
+      "split": "dev",
+      "kind": "fact",
+      "question": "指纹测试为什么不能随机拆同一轮的相邻扫描？",
+      "answer": "泄漏使成绩虚高；按日期、设备或批次划分。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "应按日期、采集设备或采集批次划分测试数据"
+        }
+      ]
+    },
+    {
+      "id": "fact-22",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "座位信号短暂消失时设计成什么中间状态？",
+      "answer": "疑似离开；短时间恢复则使用中。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "信号短暂消失\n疑似离开"
+        }
+      ]
+    },
+    {
+      "id": "fact-23",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "指纹采集建议使用几种安卓手机？",
+      "answer": "2至3种。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "使用 2 至 3 种 Android 手机"
+        }
+      ]
+    },
+    {
+      "id": "fact-24",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "相邻座位为什么要给多个候选而不是硬选一个？",
+      "answer": "指纹接近，RSSI差可能小于环境噪声。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "RSSI 变化可能小于环境噪声"
+        }
+      ]
+    },
+    {
+      "id": "fact-25",
+      "split": "dev",
+      "kind": "fact",
+      "question": "K=5指五个座位还是五条参考？",
+      "answer": "五条参考，top_n=3才是最多三个不同座位。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "`K=5` 是取 5 条参考，不是 5 个座位"
+        }
+      ]
+    },
+    {
+      "id": "fact-26",
+      "split": "dev",
+      "kind": "fact",
+      "question": "新手机偏移拟合至少需要共同看到几个AP？",
+      "answer": "至少3个。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "共同 AP 不足 3 个时，这条参考不参与有效的偏移拟合"
+        }
+      ]
+    },
+    {
+      "id": "fact-27",
+      "split": "dev",
+      "kind": "fact",
+      "question": "新设备RSSI偏移允许的范围是多少？",
+      "answer": "限制在±12dB。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "并把结果限制在 `±12 dB`"
+        }
+      ]
+    },
+    {
+      "id": "fact-28",
+      "split": "dev",
+      "kind": "fact",
+      "question": "AP重要性用方差还是标准差算？",
+      "answer": "使用参考指纹标准差；顶部说明有误，以函数为准。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "这里准确地说使用的是**标准差**"
+        }
+      ]
+    },
+    {
+      "id": "fact-29",
+      "split": "dev",
+      "kind": "fact",
+      "question": "separation 的第二个距离一定来自票数第二名吗？",
+      "answer": "不是；来自所有其他座位参考中的最近距离。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "并不一定是投票第二名座位的距离，也不限于 Top-K 内的参考"
+        }
+      ]
+    },
+    {
+      "id": "fact-30",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "KNN可信度缺少正确错误样本时怎么办？",
+      "answer": "退回启发式公式。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "如果训练数据不足以拟合逻辑回归"
+        }
+      ]
+    },
+    {
+      "id": "fact-31",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "推断时会按当前上午下午只选对应指纹吗？",
+      "answer": "不会，同时比较所有时段参考。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "预测时会同时比较所有时段的参考指纹，不会根据当前时间只查某一个时段"
+        }
+      ]
+    },
+    {
+      "id": "fact-32",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "模型对第一次出现的新手机能保证准确定位吗？",
+      "answer": "不能，偏移与位置可能歧义，需要标定或更多观测。",
+      "evidence": [
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "却不能保证任何设备第一次进入都能自动准确定位"
+        }
+      ]
+    },
+    {
+      "id": "fact-33",
+      "split": "dev",
+      "kind": "fact",
+      "question": "刷题站允许队长自行转让权限吗？",
+      "answer": "不能，教练可更换队长，且每队唯一队长。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "队长不能自行转让队长权限"
+        }
+      ]
+    },
+    {
+      "id": "fact-34",
+      "split": "dev",
+      "kind": "fact",
+      "question": "全体作业怎么避免后加队伍污染历史任务？",
+      "answer": "发布时生成队伍任务快照。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "建议在发布时生成队伍任务快照"
+        }
+      ]
+    },
+    {
+      "id": "fact-35",
+      "split": "dev",
+      "kind": "fact",
+      "question": "逾期标红由浏览器时间还是服务器时间决定？",
+      "answer": "后端服务器时间，前端展示。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "逾期状态必须由后端根据服务器时间计算"
+        }
+      ]
+    },
+    {
+      "id": "fact-36",
+      "split": "dev",
+      "kind": "fact",
+      "question": "刷题积分应该只存可修改总分吗？",
+      "answer": "不，只存积分事件流水并可汇总。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "积分必须采用“积分事件流水”设计"
+        }
+      ]
+    },
+    {
+      "id": "fact-37",
+      "split": "dev",
+      "kind": "fact",
+      "question": "删除刷题记录怎么修正积分？",
+      "answer": "使用反向积分事件。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "删除或撤销记录时，通过反向积分事件修正"
+        }
+      ]
+    },
+    {
+      "id": "fact-38",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "部分私密用户可以公开展示代码吗？",
+      "answer": "部分私密不可看详细提交和具体代码，教练站主不受限。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "不能查看具体代码"
+        }
+      ]
+    },
+    {
+      "id": "fact-39",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "刷题网站计划使用哪种密码散列？",
+      "answer": "BCrypt。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "密码使用 BCrypt 加密"
+        }
+      ]
+    },
+    {
+      "id": "fact-40",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "刷题平台后端建议用什么部署组合？",
+      "answer": "Docker Compose：Nginx、Spring Boot、MySQL8、Redis和前端静态文件。",
+      "evidence": [
+        {
+          "documentId": "brush-website-plan",
+          "quote": "建议使用 Docker Compose 部署"
+        }
+      ]
+    },
+    {
+      "id": "fact-41",
+      "split": "dev",
+      "kind": "fact",
+      "question": "博客希望中性色、红黑、金粉大概占多少？",
+      "answer": "60%、30%、10%。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "60% 中性色 + 30% 红/黑 + 10% 金/粉"
+        }
+      ]
+    },
+    {
+      "id": "fact-42",
+      "split": "dev",
+      "kind": "fact",
+      "question": "铃月博客背景建议的十六进制颜色是什么？",
+      "answer": "奶油白#FFF8F0。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "#FFF8F0"
+        }
+      ]
+    },
+    {
+      "id": "fact-43",
+      "split": "dev",
+      "kind": "fact",
+      "question": "琥珀金能直接拿来做白底正文吗？",
+      "answer": "不能，对比度不足；金文字用#A66A00。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "金色文字用"
+        }
+      ]
+    },
+    {
+      "id": "fact-44",
+      "split": "dev",
+      "kind": "fact",
+      "question": "页面圆角建议多大？",
+      "answer": "12–16px。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "12–16px"
+        }
+      ]
+    },
+    {
+      "id": "fact-45",
+      "split": "dev",
+      "kind": "fact",
+      "question": "主色女仆红的色号是多少？",
+      "answer": "#B83B3B。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "#B83B3B"
+        }
+      ]
+    },
+    {
+      "id": "fact-46",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "页脚建议什么颜色和字色？",
+      "answer": "女仆黑底白字，可加粉色猫爪爱心。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "页脚用女仆黑，白字"
+        }
+      ]
+    },
+    {
+      "id": "fact-47",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "铃月博客中文标题推荐哪几种字体？",
+      "answer": "站酷快乐体、得意黑、霞鹜文楷。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "站酷快乐体、得意黑、霞鹜文楷"
+        }
+      ]
+    },
+    {
+      "id": "fact-48",
+      "split": "holdout",
+      "kind": "fact",
+      "question": "引用块打算做什么风格？",
+      "answer": "左边红色竖线、浅粉背景。",
+      "evidence": [
+        {
+          "documentId": "blog-theme-style",
+          "quote": "左边红色竖线，浅粉背景"
+        }
+      ]
+    },
+    {
+      "id": "multi-01",
+      "split": "dev",
+      "kind": "multi",
+      "question": "WiFi入门和决策树实验都认为可信度能直接当成准确概率吗？",
+      "answer": "不能：入门的0.86需校准，树模型是训练类别频率且未独立校准。",
+      "evidence": [
+        {
+          "documentId": "wifi-fingerprint-intro",
+          "quote": "不能直接把 `0.86` 宣称成 86% 的真实准确率"
+        },
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "当前决策树没有做独立概率校准"
+        }
+      ]
+    },
+    {
+      "id": "multi-02",
+      "split": "holdout",
+      "kind": "multi",
+      "question": "树和KNN在共同AP不足3个时分别怎么处理？",
+      "answer": "树证据不足需人工确认；KNN不进行有效偏移拟合，并可清零可信度需复核。",
+      "evidence": [
+        {
+          "documentId": "wifi-decision-tree",
+          "quote": "共同有效 AP 不足"
+        },
+        {
+          "documentId": "wifi-knn-impl",
+          "quote": "共同 AP 不足 3 个时，这条参考不参与有效的偏移拟合"
+        }
+      ]
+    },
+    {
+      "id": "negative-1",
+      "split": "dev",
+      "kind": "unrelated",
+      "question": "请给出2027年世界杯最终比分。",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-2",
+      "split": "dev",
+      "kind": "unrelated",
+      "question": "我昨晚买的彩票开奖号码是什么？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-3",
+      "split": "dev",
+      "kind": "unrelated",
+      "question": "告诉我火星移民公司本周真实股价。",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-4",
+      "split": "dev",
+      "kind": "missing-detail",
+      "question": "博客里的WiFi系统实际在哪栋教学楼做了千人验收，准确率多少？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-5",
+      "split": "dev",
+      "kind": "missing-detail",
+      "question": "刷题站生产数据库的真实连接密码是什么？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-6",
+      "split": "holdout",
+      "kind": "unrelated",
+      "question": "请读取我家冰箱今天还剩哪些菜。",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-7",
+      "split": "holdout",
+      "kind": "unrelated",
+      "question": "我今天银行账户余额是多少？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-8",
+      "split": "holdout",
+      "kind": "missing-detail",
+      "question": "Glowspire已经获得多少付费用户，昨日收入多少？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-9",
+      "split": "holdout",
+      "kind": "missing-detail",
+      "question": "铃月博客去年每月真实访客数分别是多少？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    },
+    {
+      "id": "negative-10",
+      "split": "holdout",
+      "kind": "missing-detail",
+      "question": "座位决策树作者最终上线使用的生产服务器IP是什么？",
+      "answer": "公开资料没有相应证据，不能编造。",
+      "evidence": []
+    }
+  ],
+  "updated": "2026-10-27: Glowspire BF16/LoRA and revised theme article"
+}

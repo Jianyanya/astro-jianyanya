@@ -142,10 +142,7 @@ featuredSeries:
     categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
     label: 我的周刊 # 简短名称
     fullName: 我的技术周刊 # 完整名称
-    description: | # 支持多行 Markdown
-      这是周刊/系列文章功能的示例配置。
-      你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
-      设置 enabled: false 可以关闭此功能。
+    description: 记录 AI 应用、检索算法与软件开发中的学习、实践和思考。
     cover: /img/weekly_header.webp # 系列页面头图
     enabled: true # 启用此系列
     icon: ri:newspaper-line # 导航图标

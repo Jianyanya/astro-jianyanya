@@ -201,6 +201,21 @@ instructions do not govern the new backend.
   Definite 429 rejection refunds the reservation; uncertain network/5xx usage stays conservatively budgeted.
   `useChatAccess.ts` displays cooldown/login status without starting model calls or auto-resubmitting questions.
 - `docs/features/lingyue-deployment.md` is the new deployment and article publishing guide.
+- Current RAG details: `docs/features/lingyue-rag.md`. Keep exact pgvector cosine search for this small blog;
+  do not add HNSW/IVFFlat without a measured latency need. AST chunking uses the pinned BGE-M3 tokenizer,
+  512 tokens including title/heading, sentence/line boundaries, complete fences and small sentence overlap.
+  Chat text uses a pinned DeepSeek tokenizer plus a separate envelope reserve; provider usage remains authoritative.
+  `knowledge:tokenizers` downloads checksum-verified vocabularies, never model weights. Only chat vocabularies
+  enter the private Vercel function; never place them, snapshots or vectors in static output/client props.
+- `lingyue.withdrawals` is a global denylist, SELECT-only for runtime. `publish:blog` builds a fresh snapshot,
+  begins withdrawal of absent public documents BEFORE embedding generation, then stages/pushes/verifies/activates.
+  `generate:knowledge` remains local-only. `knowledge:withdraw --id=...` revokes independently. Publication sequences
+  invalidate old publishers after another publication/manual withdrawal; do not bypass them on retry/rollback.
+  Re-added documents return only after complete verified activation; already-delivered answers cannot be erased.
+- Rerank scores are retained; evidence filtering/deduplication uses a token budget and may return zero sources.
+  `evaluation/lingyue/` contains a frozen dev/holdout regression set with exact evidence quotes and draft owner-review
+  labels. `knowledge:evaluate --split=dev` uses ephemeral local PostgreSQL/pgvector and real provider calls/cache;
+  never tune on holdout or describe these small, author-curated scores as full answer-quality guarantees.
 - Required checks: blog lint/check/build, `pnpm test:lingyue`; Cloudflare checks remain regression checks for fallback.
   PGlite tests execute PostgreSQL + pgvector locally, but cannot establish live Neon multi-connection concurrency,
   Vercel cancellation behavior, regional latency, deployment promotion or DNS/TLS success.

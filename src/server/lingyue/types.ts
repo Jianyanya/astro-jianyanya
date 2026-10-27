@@ -18,10 +18,17 @@ export interface Chunk {
   tags: string[];
   text: string;
   hash: string;
+  embeddingTokens?: number;
+  kind?: 'text' | 'code' | 'mixed';
+  continuation?: boolean;
+  sourceStart?: number;
+  sourceEnd?: number;
 }
 
 export interface Source {
   id: string;
+  documentId?: string;
+  chunkId?: string;
   title: string;
   heading: string;
   url: string;

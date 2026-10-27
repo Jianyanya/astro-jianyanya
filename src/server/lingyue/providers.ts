@@ -108,7 +108,11 @@ export class Providers {
       return item.embedding;
     });
   }
-  async rerank(query: string, documents: string[], signal: AbortSignal): Promise<number[]> {
+  async rerank(
+    query: string,
+    documents: string[],
+    signal: AbortSignal,
+  ): Promise<Array<{ index: number; relevance_score: number }>> {
     const result = z
       .object({ results: z.array(z.object({ index: z.number().int().nonnegative(), relevance_score: z.number().finite() })) })
       .parse(
@@ -119,9 +123,13 @@ export class Providers {
         ),
       );
     const indices = result.results.map((x) => x.index);
-    if (new Set(indices).size !== documents.length || indices.some((i) => i >= documents.length))
+    if (
+      indices.length !== documents.length ||
+      new Set(indices).size !== documents.length ||
+      indices.some((i) => i >= documents.length)
+    )
       throw new Error('Invalid rerank');
-    return indices;
+    return result.results.sort((a, b) => b.relevance_score - a.relevance_score);
   }
   async chat(
     messages: Array<Message | { role: 'system'; content: string }>,

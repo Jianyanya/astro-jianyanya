@@ -1,11 +1,13 @@
 import { loadConfig } from '../../src/server/lingyue/config.js';
 import { snapshotSchema } from '../../src/server/lingyue/manifest.js';
 import { Providers } from '../../src/server/lingyue/providers.js';
+import { ensureTokenizers } from '../../src/server/lingyue/tokenization.js';
 import { cache, jsonFile, localEnv, saveJson } from './files.js';
 import { chunkDocument } from './markdown.js';
 import { cacheKey, embeddingText, validatePrepared, vectorSchema } from './prepared.js';
 
-async function main() {
+export async function generate() {
+  await ensureTokenizers('bge');
   const env = await localEnv();
   const snapshot = snapshotSchema.parse(await jsonFile(new URL('snapshot.json', cache)));
   let vectors: Record<string, number[]> = {};
@@ -36,8 +38,5 @@ async function main() {
   await saveJson(new URL('prepared.json', cache), prepared.artifact);
   console.log(`本地知识已生成：${snapshot.documents.length} 篇，${chunks.length} 片段；新增向量 ${missing.length}。`);
   console.log(`版本 ${prepared.manifest.version}；没有连接或更新线上知识数据库。`);
+  return prepared;
 }
-main().catch(() => {
-  console.error('知识生成未完成。请检查快照、向量缓存和 SILICONFLOW_API_KEY；已有缓存已保留。');
-  process.exitCode = 1;
-});

@@ -40,7 +40,7 @@ try {
 } catch {
   // .env is optional
 }
-const API_BASE_URL = process.env.SUMMARY_API_BASE_URL ?? 'http://127.0.0.1:1234/v1/';
+const API_BASE_URL = `${(process.env.SUMMARY_API_BASE_URL ?? 'http://127.0.0.1:1234/v1/').replace(/\/+$/, '')}/`;
 const API_KEY = process.env.SUMMARY_API_KEY ?? 'lm-studio'; // LM Studio doesn't require a real key
 const DEFAULT_MODEL = process.env.SUMMARY_MODEL ?? 'qwen/qwen3-4b-2507';
 
@@ -358,6 +358,7 @@ async function main() {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(chalk.green(`\nDone! Generated summaries for ${Object.keys(newEntries).length} posts in ${elapsed}s`));
     console.log(chalk.cyan(`Output saved to: ${OUTPUT_FILE}`));
+    if (errors > 0) process.exitCode = 1;
   } catch (error) {
     console.error(chalk.red('\nError:'), error);
     process.exitCode = 1;

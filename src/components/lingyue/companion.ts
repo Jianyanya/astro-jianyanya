@@ -20,7 +20,7 @@ function positionDock(root: HTMLElement) {
   if (width < 240) return;
   // Float over the sidebar, leaving a 24px gap before the unchanged article.
   root.style.setProperty('--lingyue-dock-width', `${width}px`);
-  root.style.setProperty('--lingyue-dock-left', `${textLeft - width - 24}px`);
+  root.style.setProperty('--lingyue-dock-left', `${textLeft - width - 40}px`);
 }
 
 function attach(root: HTMLElement) {

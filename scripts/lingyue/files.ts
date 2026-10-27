@@ -1,8 +1,11 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { parseEnv } from 'node:util';
 
 export const root = new URL('../../', import.meta.url);
 export const cache = new URL('.cache/lingyue/', root);
+export const localFileURL = (path: string) => pathToFileURL(resolve(path));
 export async function localEnv() {
   const files: Record<string, string | undefined>[] = [];
   for (const file of [new URL('../.env', root), new URL('.env', root), new URL('.env.local', root)]) {

@@ -25,6 +25,7 @@ async function main() {
     } else if (!env.DATABASE_URL) throw new Error('运行角色已存在，请恢复先前保存的 DATABASE_URL；脚本不会重置其密码。');
     await db.query(`GRANT USAGE ON SCHEMA lingyue TO lingyue_runtime;
       GRANT SELECT ON lingyue.control,lingyue.chunks TO lingyue_runtime;
+      GRANT SELECT ON lingyue.withdrawals TO lingyue_runtime;
       GRANT SELECT,INSERT,UPDATE,DELETE ON lingyue.requests TO lingyue_runtime;
       GRANT SELECT,INSERT,DELETE ON lingyue.auth_sessions TO lingyue_runtime;
       GRANT SELECT,UPDATE ON lingyue.quota_lock TO lingyue_runtime;`);

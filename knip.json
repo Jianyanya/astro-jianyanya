@@ -20,5 +20,5 @@
     "type": true
   },
   "tags": ["-lintignore"],
-  "ignore": ["public/**"]
+  "ignore": ["public/**", ".cache/**"]
 }

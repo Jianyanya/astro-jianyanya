@@ -1,9 +1,11 @@
 import type { Database } from '../../src/server/lingyue/database.js';
 import { terms } from '../../src/server/lingyue/text.js';
+import { ensureTokenizers } from '../../src/server/lingyue/tokenization.js';
 import { cacheKey, validatePrepared } from './prepared.js';
 
 /** Upload a complete immutable version in one transaction; never change the live pointer here. */
 export async function stage(db: Database, value: unknown) {
+  await ensureTokenizers('bge');
   const { artifact, chunks, manifest } = validatePrepared(value);
   await db.transaction(async (tx) => {
     await tx.query('SELECT id FROM lingyue.control WHERE id=1 FOR UPDATE');
@@ -49,20 +51,27 @@ export async function stage(db: Database, value: unknown) {
 }
 
 /** Caller verifies the public deployment fingerprint before activating. CAS rejects competing publishers. */
-export async function activate(db: Database, version: string, expected: string | null, now = new Date()) {
+export async function activate(db: Database, version: string, expected: string | null, now = new Date(), sequence?: string) {
   await db.transaction(async (tx) => {
-    const [control] = await tx.query<{ active_version: string | null }>(
-      'SELECT active_version FROM lingyue.control WHERE id=1 FOR UPDATE',
+    const [control] = await tx.query<{ active_version: string | null; publication_seq: string }>(
+      'SELECT active_version,publication_seq::text AS publication_seq FROM lingyue.control WHERE id=1 FOR UPDATE',
     );
     if (!control) throw new Error('Database is not initialized');
-    if (control.active_version === version) return;
-    if (control.active_version !== expected) throw new Error('Another release activated; verify the deployment again');
+    if (control.publication_seq !== (sequence ?? '0'))
+      throw new Error('Another publication or withdrawal superseded this release');
+    if (control.active_version !== version && control.active_version !== expected)
+      throw new Error('Another release activated; verify the deployment again');
     const [target] = await tx.query<{ chunk_count: number }>('SELECT chunk_count FROM lingyue.versions WHERE id=$1', [version]);
     const [count] = await tx.query<{ n: number }>('SELECT count(*)::int AS n FROM lingyue.chunks WHERE version=$1', [version]);
     if (!target || count!.n !== target.chunk_count) throw new Error('Incomplete knowledge version');
-    await tx.query('UPDATE lingyue.versions SET retired_at=$2 WHERE id=$1', [control.active_version, now.toISOString()]);
+    if (control.active_version !== version)
+      await tx.query('UPDATE lingyue.versions SET retired_at=$2 WHERE id=$1', [control.active_version, now.toISOString()]);
     await tx.query('UPDATE lingyue.versions SET activated_at=$2,retired_at=NULL WHERE id=$1', [version, now.toISOString()]);
     await tx.query('UPDATE lingyue.control SET active_version=$1 WHERE id=1', [version]);
+    await tx.query(
+      'DELETE FROM lingyue.withdrawals w USING lingyue.chunks c WHERE c.version=$1 AND c.document_id=w.document_id',
+      [version],
+    );
   });
 }
 

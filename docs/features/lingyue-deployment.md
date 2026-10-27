@@ -13,7 +13,7 @@ Cloudflare 继续管理 DNS；旧 Pages 自动构建已暂停，旧助手 Worker
 放在本机 `.env.local` 和 Vercel Production 服务端环境变量中，不使用 `PUBLIC_` 前缀。
 本地调试 OAuth 时另建使用本地回调地址的 App；不要给不可信 Preview 部署生产密钥。
 
-`pnpm knowledge:migrate` 会顺序执行幂等 SQL，增加登录会话和共享冷却字段，补充运行账号权限。
+`pnpm knowledge:migrate` 会顺序执行幂等 SQL，增加登录会话、共享冷却和撤回名单，补充运行账号权限。
 OAuth 使用 state 和 PKCE；仅读取公开账号信息，不请求仓库权限，GitHub Token 只在回调请求中使用。
 会话有效期 7 天，浏览器保存 HttpOnly Cookie，数据库只保存随机会话 Token 的哈希。
 退出会撤销当前会话。浏览器对话按账号分别在标签页暂存，不上传为长期记忆。
@@ -32,7 +32,7 @@ OAuth 使用 state 和 PKCE；仅读取公开账号信息，不请求仓库权�
 ## 调整聊天框左侧位置
 
 大屏定位由 `src/components/lingyue/companion.ts` 的 `positionDock()` 计算：
-`textLeft - width - 24` 中 `24` 是聊天框与正文的间隔，增大它就继续向左移动。
+`textLeft - width - 40` 中 `40` 是聊天框与正文的间隔，增大它就继续向左移动。
 `src/components/lingyue/dock.css` 的 `--lingyue-dock-left: 12px` 是小屏/回退位置，
 大屏会被 JS 设置的变量覆盖。调整时检查是否越过屏幕左边缘，不要修改文章容器宽度或边距。
 
@@ -72,7 +72,7 @@ OAuth 使用 state 和 PKCE；仅读取公开账号信息，不请求仓库权�
 4. 如有旧 Cloudflare 向量缓存，执行 `pnpm knowledge:import-cloudflare`。
    它通过已有 Wrangler 登录只读导出缓存，不改变旧知识版本或额度。只需迁移时执行。
 
-5. 本地执行 `pnpm generate:knowledge`、`pnpm knowledge:stage`。
+5. 本地执行 `pnpm build`、`pnpm knowledge:begin`、`pnpm generate:knowledge`、`pnpm knowledge:stage`。
    前者构建快照并生成缺少的向量；后者上传完整待发布版本，不改变线上有效版本。
 
 6. Vercel 导入 GitHub 原博客仓库，框架 Astro，构建 `pnpm build`，保持框架默认输出设置。
@@ -103,7 +103,7 @@ pnpm generate:tags        # 按需
 git add <本次需要提交的文件>
 git commit -m "docs: update posts"
 
-# 本地构建/增量向量 → 上传待发布版本 → Git push → 等待网站 → 启用知识
+# 构建快照 → 线上撤回删除/私密文章 → 本地增量向量 → 上传 → Git push → 验证网站 → 启用知识
 pnpm publish:blog
 ```
 
@@ -119,7 +119,10 @@ pnpm publish:blog
 只有内容指纹匹配才允许切换；另一个发布已经启用时，CAS 会拒绝覆盖。
 不要在等待期间修改文章或并行发布，也不要将发布中断误认为已全部上线。
 
-也可分步运行：`generate:knowledge` → `knowledge:stage` → Git 推送/网站部署 → `knowledge:activate`。
+也可分步运行：`pnpm build` → `knowledge:begin` → `generate:knowledge` → `knowledge:stage`
+→ Git 推送/网站部署 → `knowledge:activate`。`knowledge:begin` 是明确的线上发布操作，
+根据刚构建的快照撤回文章并保存本机发布凭据；单独本地编辑、构建和生成向量不会撤回。
+激活必须使用匹配快照的发布凭据，不能沿用被后续发布或人工撤回作废的凭据。
 网站部署和数据库不是一个事务；部署成功到知识启用之间可能有短暂版本差，失败需重试。
 
 ## 更新与删除
@@ -127,17 +130,27 @@ pnpm publish:blog
 - 快照只包含允许公开的文章；草稿、带密码或加密块的文章被排除。
 - 新版本完整保存本次公开片段，正文和向量在同一数据库事务中写入。
 - 激活只修改有效版本；所有召回在取 top-k 前限定该版本。
-- 删除/转私密在新版本启用后生效；仅在本机删除文件不影响云端。
+- 删除/转私密在正式发布开始时先写入独立撤回名单，所有召回在 top-k 前排除；
+  重排后、模型请求前和返回来源时再次检查。之后生成/部署失败，撤回仍然保留。
+  仅在本机删除文件、构建、运行 `generate:knowledge` 不影响云端。
+- 紧急只撤回一篇可执行 `pnpm knowledge:withdraw --id=文章ID`，不需要先生成向量或部署。
+  ID 是快照使用的文章 ID，不是标题或任意文件路径；该操作也作废旧发布凭据。
+- 恢复公开文章要重新发布，完整新版本验证启用后才清除对应撤回标记。
 - 修改后旧片段不会混入新版本；生成、上传失败不会发布部分数据。
 - 允许空知识库；恢复文章可以生成或启用对应版本。
 - 旧版本保留 7 天供故障回退和在途请求，应用查询不会读取它们。
 - `pnpm knowledge:cleanup` 独立、可重复执行，不依赖文章发生变化。
   每次成功启用也会尝试清理；失败后下次执行重试。尚无定时物理清理任务。
 - 已经发给访客的回答和旧会话历史不会因为删除文章而自动撤回。
+  已发送给模型的在途请求也不能追回；撤回检查保证的是后续检索和下一次模型调用的证据。
 
 目前向量搜索使用 pgvector 精确余弦距离。关键词分支沿用中文分词、标识符与汉字二元词，
 当前 PostgreSQL 实现是标题/标签/正文加权词项匹配；不是原 SQLite FTS5 BM25，
 迁移验收需对比召回结果。RRF、重排和最多 6 个来源的对话流程保留。
+完整切分策略、真实 tokenizer、证据门槛与评测说明见 [RAG 实现说明](./lingyue-rag.md)。
+
+本轮优化首次发布前执行 `pnpm knowledge:migrate`，随后按上述发布流程重建/启用新版本。
+新增 SQL 向后兼容旧服务；不要只部署新代码而漏掉撤回表和运行账号 SELECT 权限。
 
 ## 验证与回退
 

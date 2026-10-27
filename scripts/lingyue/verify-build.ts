@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict';
-import { access, readFile, writeFile } from 'node:fs/promises';
+import { access, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const vercel = process.env.VERCEL === '1' || process.platform !== 'win32';
 const directory = vercel ? '.vercel/output/static/' : 'dist/client/';
-for (const file of ['_lingyue-snapshot.json', '.env.local', '.cache/lingyue/prepared.json']) {
+for (const file of [
+  '_lingyue-snapshot.json',
+  '.env.local',
+  '.cache/lingyue/prepared.json',
+  '.belluna-tokenizers/chat.json',
+  '.cache/lingyue/tokenizers/chat.json',
+]) {
   const present = await access(new URL(`../../${directory}${file}`, import.meta.url)).then(
     () => true,
     () => false,
@@ -26,5 +32,9 @@ if (vercel) {
   const options = JSON.parse(await readFile(functionConfig, 'utf8'));
   options.supportsCancellation = true;
   await writeFile(functionConfig, `${JSON.stringify(options, null, 2)}\n`);
+  const tokenizerDirectory = new URL('../../.vercel/output/functions/_render.func/.belluna-tokenizers/', import.meta.url);
+  await mkdir(tokenizerDirectory, { recursive: true });
+  for (const file of ['chat.json', 'chat.config.json', 'DeepSeek-LICENSE'])
+    await copyFile(new URL(`../../.cache/lingyue/tokenizers/${file}`, import.meta.url), new URL(file, tokenizerDirectory));
 }
 console.log('Belluna public build artifacts verified.');

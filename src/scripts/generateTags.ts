@@ -13,7 +13,7 @@ try {
 } catch {
   // .env is optional
 }
-const API_BASE_URL = process.env.SUMMARY_API_BASE_URL ?? 'http://127.0.0.1:1234/v1/';
+const API_BASE_URL = `${(process.env.SUMMARY_API_BASE_URL ?? 'http://127.0.0.1:1234/v1/').replace(/\/+$/, '')}/`;
 const API_KEY = process.env.SUMMARY_API_KEY ?? 'lm-studio';
 const DEFAULT_MODEL = process.env.SUMMARY_MODEL ?? 'deepseek-flash';
 

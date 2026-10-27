@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { Chunk } from './types.js';
-export const PIPELINE_VERSION = 'markdown-v1-zh-segmenter-bigram';
+export const PIPELINE_VERSION = 'markdown-v2-bge5617a9f-tokens512-sentence-code';
 export const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const segmenter = new Intl.Segmenter('zh', { granularity: 'word' });
 
@@ -14,10 +14,8 @@ export function terms(s: string): string[] {
   return [...new Set([...words, ...identifiers, ...bigrams])];
 }
 
-/** UTF-8 bytes are a conservative upper-bound proxy, not a tokenizer measurement. */
-export const tokenBound = (text: string) => Buffer.byteLength(text, 'utf8');
-
-export const embeddingText = (chunk: Chunk) => `文章：${chunk.title}\n章节：${chunk.heading}\n${chunk.text}`;
+export const embeddingText = (chunk: Pick<Chunk, 'title' | 'heading' | 'text'>) =>
+  `文章：${chunk.title}\n章节：${chunk.heading}\n${chunk.text}`;
 
 export function rrf(lists: string[][], k = 60): string[] {
   const scores = new Map<string, number>();

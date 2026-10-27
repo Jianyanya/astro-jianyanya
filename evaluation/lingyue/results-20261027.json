@@ -1,0 +1,205 @@
+{
+  "baselineCommit": "3329728b789968fd21dc521e955a032c8bc98b81",
+  "reports": [
+    {
+      "schema": 1,
+      "label": "v1",
+      "split": "dev",
+      "created": "2026-10-27T02:50:55.531Z",
+      "datasetHash": "59dfefe1a96498daecaa9a0ce427ff41137bd8ab8f1e790163f030885900f195",
+      "snapshotHash": "28de7a13a2c70629010cecf2ce462d2d0401cb0bcf6d374f3a53917ab45e161b",
+      "policy": "legacy",
+      "embeddingModel": "BAAI/bge-m3",
+      "reranker": "BAAI/bge-reranker-v2-m3",
+      "labelReview": "assistant-curated; owner evidence review pending",
+      "documents": 127,
+      "chunks": 510,
+      "cases": 36,
+      "positives": 31,
+      "calls": 0,
+      "summary": {
+        "keyword": {
+          "recall": 0.9032258064516129,
+          "mrr": 0.7492831541218637,
+          "ndcg": 0.7887438899054887
+        },
+        "fused": {
+          "recall": 1,
+          "mrr": 0.7869623655913979,
+          "ndcg": 0.8334115834685435
+        },
+        "reranked": {
+          "recall": 1,
+          "mrr": 0.9623655913978494,
+          "ndcg": 0.9742442410492509
+        },
+        "selected": {
+          "recall": 0.9838709677419355,
+          "mrr": 0.9623655913978494,
+          "ndcg": 0.9657259145146512
+        }
+      },
+      "negatives": {
+        "unrelated": {
+          "count": 3,
+          "evidenceAcceptanceRate": 1
+        },
+        "missing-detail": {
+          "count": 2,
+          "evidenceAcceptanceRate": 1
+        }
+      },
+      "averageEvidence": 5
+    },
+    {
+      "schema": 1,
+      "label": "v2",
+      "split": "dev",
+      "created": "2026-10-27T02:51:05.396Z",
+      "datasetHash": "59dfefe1a96498daecaa9a0ce427ff41137bd8ab8f1e790163f030885900f195",
+      "snapshotHash": "28de7a13a2c70629010cecf2ce462d2d0401cb0bcf6d374f3a53917ab45e161b",
+      "policy": "current",
+      "embeddingModel": "BAAI/bge-m3",
+      "reranker": "BAAI/bge-reranker-v2-m3",
+      "labelReview": "assistant-curated; owner evidence review pending",
+      "documents": 127,
+      "chunks": 569,
+      "cases": 36,
+      "positives": 31,
+      "calls": 0,
+      "summary": {
+        "keyword": {
+          "recall": 0.9354838709677419,
+          "mrr": 0.7476190476190476,
+          "ndcg": 0.7856757792913943
+        },
+        "fused": {
+          "recall": 1,
+          "mrr": 0.789784946236559,
+          "ndcg": 0.8345781673313717
+        },
+        "reranked": {
+          "recall": 1,
+          "mrr": 0.967741935483871,
+          "ndcg": 0.9735993643964872
+        },
+        "selected": {
+          "recall": 1,
+          "mrr": 0.967741935483871,
+          "ndcg": 0.9681758954845157
+        }
+      },
+      "negatives": {
+        "unrelated": {
+          "count": 3,
+          "evidenceAcceptanceRate": 0
+        },
+        "missing-detail": {
+          "count": 2,
+          "evidenceAcceptanceRate": 0
+        }
+      },
+      "averageEvidence": 1.9722222222222223
+    },
+    {
+      "schema": 1,
+      "label": "v1",
+      "split": "holdout",
+      "created": "2026-10-27T02:51:12.083Z",
+      "datasetHash": "59dfefe1a96498daecaa9a0ce427ff41137bd8ab8f1e790163f030885900f195",
+      "snapshotHash": "28de7a13a2c70629010cecf2ce462d2d0401cb0bcf6d374f3a53917ab45e161b",
+      "policy": "legacy",
+      "embeddingModel": "BAAI/bge-m3",
+      "reranker": "BAAI/bge-reranker-v2-m3",
+      "labelReview": "assistant-curated; owner evidence review pending",
+      "documents": 127,
+      "chunks": 510,
+      "cases": 24,
+      "positives": 19,
+      "calls": 0,
+      "summary": {
+        "keyword": {
+          "recall": 0.8421052631578947,
+          "mrr": 0.7473684210526316,
+          "ndcg": 0.7709848586514451
+        },
+        "fused": {
+          "recall": 1,
+          "mrr": 0.7736842105263158,
+          "ndcg": 0.8236389606844846
+        },
+        "reranked": {
+          "recall": 1,
+          "mrr": 0.9736842105263158,
+          "ndcg": 0.9805752501879714
+        },
+        "selected": {
+          "recall": 1,
+          "mrr": 0.9736842105263158,
+          "ndcg": 0.9805752501879714
+        }
+      },
+      "negatives": {
+        "unrelated": {
+          "count": 2,
+          "evidenceAcceptanceRate": 1
+        },
+        "missing-detail": {
+          "count": 3,
+          "evidenceAcceptanceRate": 1
+        }
+      },
+      "averageEvidence": 4.833333333333333
+    },
+    {
+      "schema": 1,
+      "label": "v2",
+      "split": "holdout",
+      "created": "2026-10-27T02:51:21.180Z",
+      "datasetHash": "59dfefe1a96498daecaa9a0ce427ff41137bd8ab8f1e790163f030885900f195",
+      "snapshotHash": "28de7a13a2c70629010cecf2ce462d2d0401cb0bcf6d374f3a53917ab45e161b",
+      "policy": "current",
+      "embeddingModel": "BAAI/bge-m3",
+      "reranker": "BAAI/bge-reranker-v2-m3",
+      "labelReview": "assistant-curated; owner evidence review pending",
+      "documents": 127,
+      "chunks": 569,
+      "cases": 24,
+      "positives": 19,
+      "calls": 0,
+      "summary": {
+        "keyword": {
+          "recall": 0.9473684210526315,
+          "mrr": 0.7492690058479532,
+          "ndcg": 0.7949279901646943
+        },
+        "fused": {
+          "recall": 1,
+          "mrr": 0.7192982456140351,
+          "ndcg": 0.7917273606379234
+        },
+        "reranked": {
+          "recall": 1,
+          "mrr": 1,
+          "ndcg": 1
+        },
+        "selected": {
+          "recall": 1,
+          "mrr": 1,
+          "ndcg": 1
+        }
+      },
+      "negatives": {
+        "unrelated": {
+          "count": 2,
+          "evidenceAcceptanceRate": 0
+        },
+        "missing-detail": {
+          "count": 3,
+          "evidenceAcceptanceRate": 0.3333333333333333
+        }
+      },
+      "averageEvidence": 2.25
+    }
+  ]
+}
