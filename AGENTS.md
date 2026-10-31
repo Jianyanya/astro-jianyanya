@@ -298,6 +298,16 @@ node scripts/check-dev.mjs           # Real local dev proxy; model keys forced e
 
 **Subsequent local verification (2026-10-19)**: Windows-native Qdrant 1.16.3 was downloaded from the official release and its SHA256 verified. The 129-document snapshot was indexed into 521 chunks; real SiliconFlow embedding/rerank and one short DeepSeek Flash reply with citations passed without retrieval degradation. This does not establish full answer quality or Docker/production readiness. Parent-workspace `scripts/start-local.ps1` reuses running local services; `-Reindex` explicitly updates the index. `scripts/stop-local.ps1` checks tracked PID/start time and preserves unmanaged processes/data. Local logs and data are under `../data/`; startup records are in `../.acceptance/local-deployment.json`. These are background local processes, not automatically starting Windows services.
 
+### Friend network and character readiness
+
+`src/components/friends/FriendsNetwork.astro` replaces the friend-page grid with a radial graph;
+`friends-network.ts` owns resize/hover/focus/touch, filtering and the staged 80ms entrance.
+`src/lib/friend-network.ts` computes positions; existing `friends.data` and groups remain the only data source.
+Keep reduced-motion, offscreen entrance, page-swap cleanup, avatar fallback and real outbound links usable.
+`src/components/lingyue/art-readiness.ts` decodes all images of each pose before setting `data-art-ready`;
+hide incomplete SVGs with visibility (pose keyframes can override opacity). Preserve the text launcher on failure,
+the persisted companion and the original registered artwork. No paid calls are needed for these interactions.
+
 ## Component Patterns
 
 ### Component Design Principles

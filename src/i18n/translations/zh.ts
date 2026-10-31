@@ -121,6 +121,13 @@ export const uiStrings = {
 
   // ── Friends ─────────────────────────────────────────────────
   'friends.title': '友情链接',
+  'friends.networkLabel': '以本站为中心的朋友关系图',
+  'friends.networkTitle': '相遇有迹，来往成网。',
+  'friends.networkSubtitle': '从我的小小星球出发，去朋友的世界坐坐。',
+  'friends.replay': '再绽放一次',
+  'friends.visitSite': '去串门',
+  'friends.connections': '条温暖的连线',
+  'friends.networkHint': '悬停看名片 · 点击节点停留 · 轻触也可以',
   'friends.countUnit': '位朋友',
   'friends.emptyTitle': '还没有友链',
   'friends.emptyDesc': '欢迎留下你的小站，成为第一位朋友。',

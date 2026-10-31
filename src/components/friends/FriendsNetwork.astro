@@ -1,0 +1,77 @@
+---
+import { friendGroups, friendsData } from '@constants/friends-config';
+import { siteConfig } from '@constants/site-config';
+import { layoutFriendNetwork } from '@lib/friend-network';
+import { Icon } from 'astro-icon/components';
+import { defaultLocale, localizedPath, t } from '@/i18n';
+import './friends-network.css';
+import './friends-network-motion.css';
+
+interface Props {
+  locale?: string;
+}
+const { locale = defaultLocale } = Astro.props;
+const layout = layoutFriendNetwork(friendsData.length, 800);
+const groups = friendGroups.map((group) => ({
+  ...group,
+  count: friendsData.filter((friend) => friend.group === group.id).length,
+}));
+const groupFor = (id?: string) => groups.find((group) => group.id === id);
+---
+
+<section class="friends-network" data-friends-network data-network-state="pending" aria-label={t(locale, 'friends.networkLabel')}>
+  <header class="friends-network-heading">
+    <div><span class="network-eyebrow">BELLUNA · FRIENDS</span><h2>{t(locale, 'friends.networkTitle')}</h2><p>{t(locale, 'friends.networkSubtitle')}</p></div>
+    <button class="network-replay" type="button" data-network-replay><Icon name="ri:restart-line" />{t(locale, 'friends.replay')}</button>
+  </header>
+  <div class="network-filters" role="group" aria-label={t(locale, 'friends.filterLabel')}>
+    <button type="button" data-network-filter="all" aria-pressed="true">{t(locale, 'friends.all')}<small>{friendsData.length}</small></button>
+    {groups.map((group) => <button type="button" data-network-filter={group.id} aria-pressed="false">{group.title}<small>{group.count}</small></button>)}
+  </div>
+  <div class="network-stage" data-network-stage style={{ height: `${layout.height}px` }}>
+    <div class="network-orbit network-orbit-one" aria-hidden="true"></div>
+    <div class="network-orbit network-orbit-two" aria-hidden="true"></div>
+    <span class="network-star network-star-one" aria-hidden="true">✧</span><span class="network-star network-star-two" aria-hidden="true">✦</span>
+    <svg class="network-links" viewBox={`0 0 800 ${layout.height}`} preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        {layout.nodes.map((node, i) => (
+          <mask id={`friend-link-reveal-${i}`} maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+            <path data-network-reveal={i} d={`M ${layout.cx} ${layout.cy} L ${node.x} ${node.y}`} pathLength="1" fill="none" stroke="white" stroke-width="8" stroke-dasharray="1" />
+          </mask>
+        ))}
+      </defs>
+      {layout.nodes.map((node, i) => <path data-network-link={i} d={`M ${layout.cx} ${layout.cy} L ${node.x} ${node.y}`} mask={`url(#friend-link-reveal-${i})`} />)}
+    </svg>
+    <div class="network-hub" data-network-hub>
+      <div class="network-hub-halo" aria-hidden="true"></div>
+      <a class="network-hub-avatar" href={localizedPath('/', locale)} aria-label={siteConfig.name}>
+        <img src={siteConfig.avatar} width="112" height="112" alt={siteConfig.name} decoding="async" />
+      </a>
+      <div class="network-hub-label"><span class="network-home-tag">HOME PLANET</span><strong>{siteConfig.name}</strong><span>{siteConfig.title} · belluna.love</span></div>
+    </div>
+    {friendsData.map((friend, i) => (
+      <div class="friend-satellite" data-network-node={i} data-group={groupFor(friend.group)?.id ?? 'ungrouped'}
+        style={{ '--node-x': `${layout.nodes[i].x - layout.cx}px`, '--node-y': `${layout.nodes[i].y - layout.cy}px`, '--float-delay': `${i * -0.8}s`, '--friend-color': friend.color ?? '#bf746f' }}>
+        <button type="button" class="friend-planet" data-network-select={i} aria-label={`${friend.owner} · ${friend.site}`} aria-expanded="false" aria-controls={`friend-passport-${i}`}>
+          <span class="friend-planet-avatar"><span aria-hidden="true">{friend.owner.slice(0, 1)}</span>{friend.image && <img data-network-avatar data-src={friend.image} width="68" height="68" alt="" hidden decoding="async" referrerpolicy="no-referrer" />}</span>
+          <span class="friend-planet-name">{friend.owner}</span><span class="friend-planet-site">{friend.site}</span>
+        </button>
+      </div>
+    ))}
+    {friendsData.map((friend, i) => (
+      <div id={`friend-passport-${i}`} class="friend-passport" data-network-card={i} hidden>
+        <span class="passport-kicker">{groupFor(friend.group)?.title ?? t(locale, 'friends.ungrouped')}<span aria-hidden="true">✦</span></span>
+        <strong>{friend.owner}</strong><span class="passport-site">{friend.site}</span>
+        <p>{friend.desc}</p><a href={friend.url} target="_blank" rel="noopener noreferrer">{t(locale, 'friends.visitSite')}<Icon name="ri:arrow-right-up-line" /></a>
+      </div>
+    ))}
+    <p class="network-empty" data-network-empty hidden>{t(locale, 'friends.emptyGroupDescription')}</p>
+    <p class="network-coordinate" aria-hidden="true">01 / OUR LITTLE INTERNET</p>
+  </div>
+  <footer class="network-caption"><span><i></i>{friendsData.length} {t(locale, 'friends.connections')}</span><p>{t(locale, 'friends.networkHint')}</p></footer>
+  <noscript><style>.friends-network .friend-satellite { opacity: 1; } .network-links { opacity: 1 !important; } .network-replay { display: none; }</style><ul>{friendsData.map(friend => <li><a href={friend.url} rel="noopener noreferrer" target="_blank">{friend.owner} · {friend.site}</a> — {friend.desc}</li>)}</ul></noscript>
+</section>
+
+<script>
+  import './friends-network';
+</script>

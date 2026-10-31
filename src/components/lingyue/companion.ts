@@ -1,3 +1,5 @@
+import { prepareCharacterArt } from './art-readiness';
+
 const RETRACT_AFTER_MS = 45000;
 
 interface ChatState {
@@ -31,6 +33,7 @@ function attach(root: HTMLElement) {
   const hint: HTMLElement = hintNode;
   const listeners = new AbortController();
   const options = { signal: listeners.signal };
+  prepareCharacterArt(root, listeners.signal);
   let state: ChatState = { open: false, busy: false, hasDraft: false, speaking: false };
   let petting = false;
   let panelHover = false;

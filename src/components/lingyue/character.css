@@ -1,3 +1,36 @@
+/* Visibility also defeats pose keyframes: opacity alone could reveal partial layers. */
+.lingyue-character:not([data-art-ready="true"]),
+.lingyue-perch:not([data-art-ready="true"]) {
+  visibility: hidden;
+}
+.lingyue-art-placeholder {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-content: center;
+  border: 1px solid #c4655f55;
+  border-radius: 50%;
+  background: #fff6e9;
+  box-shadow: 0 4px 20px #742c4520;
+  color: #9d4c50;
+  font-size: 12px;
+  transform: translateX(-50%);
+}
+.lingyue-art-placeholder span {
+  color: #b58a4a;
+  font-size: 10px;
+}
+[data-pose="peek"]:has(.lingyue-character[data-art-ready="true"]) .lingyue-art-placeholder,
+[data-pose="out"]:has(.lingyue-perch[data-art-ready="true"]) .lingyue-art-placeholder {
+  display: none;
+}
+[data-pose="peek"]:has(.lingyue-character:not([data-art-ready="true"])) :is(.lingyue-question, .lingyue-character-hint),
+[data-pose="out"]:has(.lingyue-perch:not([data-art-ready="true"])) :is(.lingyue-question, .lingyue-character-hint) {
+  visibility: hidden;
+}
 .lingyue-character-shell {
   position: fixed;
   left: 16px;

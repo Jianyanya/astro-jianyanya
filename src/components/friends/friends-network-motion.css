@@ -1,0 +1,41 @@
+[data-network-state="rest"] .friend-planet,
+[data-network-state="rest"] .network-hub-halo {
+  animation: network-breathe 5s ease-in-out var(--float-delay, 0s) infinite;
+}
+/* Paths point from the hub to a friend. Increasing offset moves dashes back to the hub. */
+[data-network-state="rest"] [data-network-link] {
+  animation: network-flow-inward 1.8s linear infinite;
+}
+.friend-planet:hover,
+.friend-planet:focus-within,
+[data-sleeping="true"] :is(.friend-planet, .network-hub-halo, [data-network-link]) {
+  animation-play-state: paused;
+}
+@keyframes network-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes network-flow-inward {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 12;
+  }
+}
+html[data-motion="reduced"] .friends-network *,
+html.motion-off .friends-network * {
+  animation: none !important;
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .friends-network * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
